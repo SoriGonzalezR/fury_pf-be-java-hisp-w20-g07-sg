@@ -7,7 +7,7 @@ spring:
    driverClassName: com.mysql.cj.jdbc.Driver
    url: jdbc:mysql://localhost:3306/warehouse?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
    username: root
-   password: Ahpwg5pBGnr_1
+   password: manuel86
   jpa:
     show-sql: true
     generate-ddl: true

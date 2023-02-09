@@ -67,6 +67,7 @@
             <exclude>**/com/mercadolibre/**/api/**</exclude>
             <exclude>**/com/mercadolibre/**/model/**</exclude>
             <exclude>**/com/mercadolibre/**/exceptions/**</exclude>
+            <exclude>**/com/mercadolibre/**/entity/**</exclude>
           </excludes>
         </configuration>
       </plugin>
