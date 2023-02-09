@@ -331,10 +331,17 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.16</version>
     </dependency>
-
-
+    <dependency>
+      <groupId>com.fury</groupId>
+      <artifactId>furyutils</artifactId>
+      <version>0.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
-
   <repositories>
     <repository>
       <id>all</id>
