@@ -4,22 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "orden_entrante")
-public class OrdenEntrante {
+@Table(name = "order_status")
+public class OrderStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int numero;
 
-    private LocalDate fecha;
+    private String estate;
 
-    //mappear
-    private List<Lote> lotes;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "orderStatus")
+    private List<PurchaseOrder> purchaseOrders;
+
 }

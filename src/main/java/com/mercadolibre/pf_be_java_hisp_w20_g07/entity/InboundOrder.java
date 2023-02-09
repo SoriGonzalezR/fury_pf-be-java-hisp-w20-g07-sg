@@ -10,18 +10,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "orden_saliente")
-public class OrdenSaliente {
+@Table(name = "inbound_order")
+public class InboundOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private int number;
 
-    private LocalDate fecha;
+    private LocalDate date;
 
-    //mappear
-    private EstadoOrden estadoOrden;
-
-    //mappear
-    private List<OrdenSalienteHasProducto> ordenSalienteHasProductos;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "inboundOrder")
+    private List<Batch> batches;
 }

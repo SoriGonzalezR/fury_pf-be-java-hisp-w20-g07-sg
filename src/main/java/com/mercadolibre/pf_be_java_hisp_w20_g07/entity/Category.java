@@ -4,22 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Table(name = "category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String usuario;
-    private String contrasena;
+    private String code;
+    private String name;
 
-    //maper
-    private Rol rol;
-
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    List<Section> section;
 }
