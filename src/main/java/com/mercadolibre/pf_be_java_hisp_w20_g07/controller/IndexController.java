@@ -24,14 +24,9 @@ public class IndexController {
     }
 
     //US_2 buyer
-    @GetMapping("/fresh-products/list")
-    public ResponseEntity<String> r2_1() {
-        String info = "info imortante get /api/v1/fresh-products/list";
-        return new ResponseEntity(info, HttpStatus.OK);
-    }
 
-    @GetMapping("/fresh-products/list?category={FS, RF, FF}")
-    public ResponseEntity<String> r2_2(@RequestParam String category) {
+    @GetMapping("/fresh-products/list")
+    public ResponseEntity<String> r2__1_2(@RequestParam(required = false) String category) {
         String info = "info imortante get /api/v1/fresh-products/list?category={FS, RF, FF}";
         return new ResponseEntity(info, HttpStatus.OK);
     }
@@ -55,6 +50,39 @@ public class IndexController {
     }
 
     //US_3 Representante
+
+    @GetMapping("/fresh-products/{idProduct}/batch/list")
+    public ResponseEntity<String> r3__1_2(@RequestParam(required = false) String idOrder) {
+        String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
+        return new ResponseEntity(info, HttpStatus.OK);
+    }
+
+    //US 4 Representante
+    @GetMapping("/fresh-products/{idProduct}/warehouse/list")
+    public ResponseEntity<String> r4__1() {
+        String info = "info imortante get /api/v1/fresh-products/{idProduct}/warehouse/list";
+        return new ResponseEntity(info, HttpStatus.OK);
+    }
+
+    //US 5 Representante
+
+
+
+    @GetMapping("/fresh-products/batch/list/due-date/{cantDays}")
+    public ResponseEntity<String> r5__1_2(
+            @PathVariable int cantDayes,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String order
+            ) {
+        String info = "info imortante get /api/v1/fresh-products/batch/list/due-date/{cantDays}?category = {FS, RF, FF}&order = {date_asc, date_desc}}";
+        return new ResponseEntity(info, HttpStatus.OK);
+    }
+
+
+
+
+
+
 
 
 
