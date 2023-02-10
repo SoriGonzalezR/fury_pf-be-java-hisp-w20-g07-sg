@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,8 +23,8 @@ public class Role {
     @Column(name = "user_role")
     private String userRole;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "role")
-    private User user;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "role")
+    private List<User> user;
 
     public Role() {
 
