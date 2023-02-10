@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Table(name = "role")
 public class Role {
 
+    public Role(String userRole) {
+        this.userRole = userRole;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

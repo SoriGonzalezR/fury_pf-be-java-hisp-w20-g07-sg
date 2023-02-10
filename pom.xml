@@ -68,6 +68,7 @@
             <exclude>**/com/mercadolibre/**/model/**</exclude>
             <exclude>**/com/mercadolibre/**/exceptions/**</exclude>
             <exclude>**/com/mercadolibre/**/entity/**</exclude>
+            <exclude>**/com/mercadolibre/**/security/JWTAuthorizationFilter.class</exclude>
             <exclude>**/com/mercadolibre/**/config/DataSourceConfig.class</exclude>
           </excludes>
         </configuration>
@@ -342,6 +343,28 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <!-- Login JWT -->
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>0.9.1</version>
+    </dependency>
+
+    <!-- JWT -->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <repositories>
