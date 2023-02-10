@@ -4,9 +4,8 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.UserRequestDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.UserResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.User;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.UserRepository;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IUserRepository;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.ISesionService;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,14 @@ import java.util.stream.Collectors;
 
 import static com.mercadolibre.pf_be_java_hisp_w20_g07.util.CONSTANTS.SECRET_KEY_TOKEN;
 
+
 @Service
 public class SesionServiceImpl implements ISesionService {
 
-    UserRepository userRepository;
-    public SesionServiceImpl () {
-        this.userRepository = new UserRepository();
+    IUserRepository userRepository;
+
+    public SesionServiceImpl(IUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class SesionServiceImpl implements ISesionService {
         //Voy a la base de datos y reviso que el usuario y contraseña existan.
         // ToDo: se podria agregar alguna libreria para encriptar la password
         String username = user.getUserName();
-        User usuario = userRepository.findByUsernameAndPassword(username, user.getPassword())
+        User usuario = userRepository.findUserByUsernameAndPassword(username, user.getPassword())
                 .orElseThrow(UserNotFoundException::new);
 
 

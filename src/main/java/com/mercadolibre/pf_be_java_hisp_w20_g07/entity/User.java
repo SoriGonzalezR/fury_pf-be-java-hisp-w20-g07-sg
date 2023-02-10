@@ -16,12 +16,7 @@ import java.util.List;
 @Table(name = "usuarios")
 public class User {
 
-    public User(Integer id, String user, String password, Role role) {
-        this.id = id;
-        this.username = user;
-        this.password = password;
-        this.role = role;
-    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +25,8 @@ public class User {
     private String username;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id",referencedColumnName = "id")
+    @ManyToOne()
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToOne(mappedBy = "user")

@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,6 +25,9 @@ public class Batch {
 
     @Column(name = "minimum_temperature")
     private double minimumTemperature;
+
+    @Column(name = "current_temperature")
+    private double currentTemperature;
     @ManyToOne()
     @JoinColumn(name = "section_id")
     private Section section;
@@ -34,5 +40,17 @@ public class Batch {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    //rework
+
+    @Column(name = "manufacturing_date")
+    private LocalDate manufacturingDate;
+
+    @Column(name = "manufacturing_time")
+    private Time manufacturingTime;
+
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
 
 }
+
