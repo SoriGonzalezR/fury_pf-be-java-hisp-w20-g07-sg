@@ -24,4 +24,8 @@ public class Role {
 
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "role")
     private User user;
+
+    public Role() {
+
+    }
 }

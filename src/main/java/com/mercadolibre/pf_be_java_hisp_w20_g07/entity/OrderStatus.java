@@ -16,7 +16,7 @@ public class OrderStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String estate;
+    private String status;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "orderStatus")
     private List<PurchaseOrder> purchaseOrders;
