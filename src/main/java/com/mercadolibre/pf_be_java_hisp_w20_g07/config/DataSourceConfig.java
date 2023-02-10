@@ -1,6 +1,5 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.config;
 
-import com.fury.api.FuryUtils;
 import com.fury.api.exceptions.FuryDecryptException;
 import com.fury.api.exceptions.FuryNotFoundAPPException;
 import com.fury.api.exceptions.FuryUpdateException;
@@ -13,7 +12,7 @@ import javax.sql.DataSource;
 
 
 @Configuration
-@Profile({"test","prod"})
+@Profile({"prod"})
 public class DataSourceConfig {
 
     @Bean

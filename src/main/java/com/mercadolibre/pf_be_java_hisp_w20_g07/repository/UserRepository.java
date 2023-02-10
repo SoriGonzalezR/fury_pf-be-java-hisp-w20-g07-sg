@@ -21,7 +21,7 @@ public class UserRepository {
     }
 
     public Optional<User> findByUsernameAndPassword(String username, String password){
-        Optional<User> user = users.stream().filter(e -> e.getUser().equals(username) && e.getPassword().equals(password)).findFirst();
+        Optional<User> user = users.stream().filter(e -> e.getUsername().equals(username) && e.getPassword().equals(password)).findFirst();
         return user;
     }
 }

@@ -6,7 +6,6 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     url: jdbc:mysql://${DB_HOST}/${SCHEMA_NAME}?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
-
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -14,6 +13,3 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: none
-  sql:
-    init:
-      mode: always

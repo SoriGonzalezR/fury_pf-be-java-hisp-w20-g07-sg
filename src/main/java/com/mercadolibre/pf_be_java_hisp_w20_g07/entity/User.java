@@ -13,12 +13,12 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "usuarios")
 public class User {
 
     public User(Integer id, String user, String password, Role role) {
         this.id = id;
-        this.user = user;
+        this.username = user;
         this.password = password;
         this.role = role;
     }
@@ -27,7 +27,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String user;
+    private String username;
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
