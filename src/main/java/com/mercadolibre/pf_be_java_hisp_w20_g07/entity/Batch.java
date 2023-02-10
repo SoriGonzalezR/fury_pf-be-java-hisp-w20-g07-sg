@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "lote")
+@Table(name = "batch")
 public class Batch {
 
     @Id

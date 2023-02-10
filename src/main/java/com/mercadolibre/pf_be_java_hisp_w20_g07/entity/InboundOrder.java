@@ -16,8 +16,6 @@ public class InboundOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int number;
-
     private LocalDate date;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "inboundOrder")

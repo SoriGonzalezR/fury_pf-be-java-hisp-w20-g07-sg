@@ -6,10 +6,10 @@
 
 spring:
   datasource:
-   driverClassName: com.mysql.cj.jdbc.Driver
-   url: jdbc:mysql://localhost:3306/warehouse?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
-   username: root
-   password: Ahpwg5pBGnr_1
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    url: jdbc:mysql://${DB_HOST}/${SCHEMA_NAME}?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
   jpa:
     show-sql: true
     generate-ddl: true
