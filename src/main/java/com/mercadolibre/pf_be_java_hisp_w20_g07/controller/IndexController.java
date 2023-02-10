@@ -11,7 +11,7 @@ public class IndexController {
 
 
     //US_1 Representante
-    @PostMapping("/fresh-products/inboundorder")
+    /*@PostMapping("/fresh-products/inboundorder")
     public ResponseEntity<String> r1_1() {
         String info = "info imortante post /api/v1/fresh-products/inboundorder";
         return new ResponseEntity(info, HttpStatus.OK);
@@ -76,7 +76,7 @@ public class IndexController {
             ) {
         String info = "info imortante get /api/v1/fresh-products/batch/list/due-date/{cantDays}?category = {FS, RF, FF}&order = {date_asc, date_desc}}";
         return new ResponseEntity(info, HttpStatus.OK);
-    }
+    }*/
 
 
 

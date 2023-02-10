@@ -68,6 +68,7 @@
             <exclude>**/com/mercadolibre/**/model/**</exclude>
             <exclude>**/com/mercadolibre/**/exceptions/**</exclude>
             <exclude>**/com/mercadolibre/**/entity/**</exclude>
+            <exclude>**/com/mercadolibre/**/security/JWTAuthorizationFilter.class</exclude>
             <exclude>**/com/mercadolibre/**/config/DataSourceConfig.class</exclude>
           </excludes>
         </configuration>
