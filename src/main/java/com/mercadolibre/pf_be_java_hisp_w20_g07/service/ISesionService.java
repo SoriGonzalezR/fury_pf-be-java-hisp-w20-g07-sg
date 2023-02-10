@@ -1,7 +1,7 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service;
 
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.UserRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.UserResponseDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.UserRequestDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.UserResponseDTO;
 
 public interface ISesionService {
 

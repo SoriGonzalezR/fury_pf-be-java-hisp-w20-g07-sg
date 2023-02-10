@@ -1,7 +1,7 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.UserRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.UserResponseDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.UserRequestDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.UserResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.User;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.UserRepository;
@@ -12,9 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.authority.AuthorityUtils;
 import io.jsonwebtoken.Jwts;
-
-
-
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

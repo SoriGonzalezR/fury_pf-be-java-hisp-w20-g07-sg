@@ -1,16 +1,14 @@
-package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos;
+package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class UserRequestDTO {
 
-    @JsonAlias("user_name")
+    @JsonAlias("userName")
     private String userName;
     private String password;
 
