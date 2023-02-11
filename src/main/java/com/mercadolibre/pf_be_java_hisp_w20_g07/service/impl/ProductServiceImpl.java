@@ -1,6 +1,5 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
@@ -19,8 +18,11 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto) {
 
+        //Validacion de que el warehouse sea valido
         warehouseService.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
                 .orElseThrow(() -> new ResourceNotFoundException("warehouse not found"));
+
+
 
 
         return null;

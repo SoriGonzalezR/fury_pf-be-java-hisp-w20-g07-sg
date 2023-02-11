@@ -1,6 +1,10 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +22,9 @@ public class InboundOrderDto {
 
     private int OrderNumber;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate orderDate;
 
     private SectionDto section;
