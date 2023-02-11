@@ -1,5 +1,6 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,8 @@ import java.util.List;
 public class InboundOrderDto {
 
     private int OrderNumber;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate orderDate;
 
     private SectionDto section;

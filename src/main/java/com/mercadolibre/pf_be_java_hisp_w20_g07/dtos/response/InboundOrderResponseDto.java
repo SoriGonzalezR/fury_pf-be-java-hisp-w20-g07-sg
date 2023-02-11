@@ -1,4 +1,4 @@
-package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request;
+package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import lombok.AllArgsConstructor;

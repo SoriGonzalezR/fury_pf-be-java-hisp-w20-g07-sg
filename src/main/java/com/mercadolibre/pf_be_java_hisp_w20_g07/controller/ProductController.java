@@ -1,19 +1,28 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/fresh-products")
 public class ProductController {
 
+    IProductService productService;
 
-    //US_1 Representante
-    /*@PostMapping("/inboundorder")
-    public ResponseEntity<String> r1_1() {
-        String info = "info imortante post /api/v1/fresh-products/inboundorder";
-        return new ResponseEntity(info, HttpStatus.OK);
+    public ProductController(IProductService productService) {
+        this.productService = productService;
     }
 
+    //US_1 Representante
+    @PostMapping("/inboundorder")
+    public ResponseEntity<InboundOrderResponseDto> r1_1(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
+        return new ResponseEntity(productService.save(inboundOrderRequestDto), HttpStatus.OK);
+    }
+/*
     @PutMapping("/inboundorder")
     public ResponseEntity<String> r1_2() {
         String info = "info imortante put /api/v1/fresh-products/inboundorder";

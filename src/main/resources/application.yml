@@ -27,3 +27,6 @@ app:
   title: pf-be-java-hisp-w20-g07
   description: '@project.description@'
   version: @project.version@
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
