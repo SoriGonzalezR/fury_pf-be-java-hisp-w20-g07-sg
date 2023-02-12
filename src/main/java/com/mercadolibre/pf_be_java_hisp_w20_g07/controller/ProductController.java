@@ -3,9 +3,13 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1/fresh-products")
@@ -19,15 +23,24 @@ public class ProductController {
 
     //US_1 Representante
     @PostMapping("/inboundorder")
-    public ResponseEntity<InboundOrderResponseDto> r1_1(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
-        return new ResponseEntity(productService.save(inboundOrderRequestDto), HttpStatus.OK);
+    public ResponseEntity<InboundOrderResponseDto> r1__1(
+            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestHeader Map<String, String> headers){
+
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
+        return new ResponseEntity(productService.save(inboundOrderRequestDto,username), HttpStatus.OK);
     }
-/*
+
     @PutMapping("/inboundorder")
-    public ResponseEntity<String> r1_2() {
-        String info = "info imortante put /api/v1/fresh-products/inboundorder";
-        return new ResponseEntity(info, HttpStatus.OK);
+    public ResponseEntity<InboundOrderResponseDto> r1__2(
+            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestHeader Map<String, String> headers){
+
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
+        return new ResponseEntity(productService.update(inboundOrderRequestDto,username), HttpStatus.OK);
     }
+
+    /*
 
     //US_2 buyer
 

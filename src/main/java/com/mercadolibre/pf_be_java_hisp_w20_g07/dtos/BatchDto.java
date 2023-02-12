@@ -15,7 +15,10 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.Calendar;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -23,23 +26,26 @@ import java.util.Date;
 @Getter @Setter
 public class BatchDto {
 
-    private Integer id;
 
-    private Product product;
+
+    private Integer batchNumber;
+
+    private int productId;
 
     private double currentTemperature;
 
     private double minimumTemperature;
     private int initialQuantity;
     private int currentQuantity;
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate manufacturingDate;
 
     @Temporal(TemporalType.TIME)
-    @DateTimeFormat(style = "HH:mm")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm")
+    @DateTimeFormat(style = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private Date manufacturingTime;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)

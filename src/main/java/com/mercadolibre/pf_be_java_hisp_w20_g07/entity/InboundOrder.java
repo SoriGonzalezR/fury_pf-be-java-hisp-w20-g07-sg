@@ -14,11 +14,11 @@ import java.util.List;
 public class InboundOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private LocalDate date;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "inboundOrder")
-    private List<Batch> batches;
+    private List<Batch> batchStock;
 }

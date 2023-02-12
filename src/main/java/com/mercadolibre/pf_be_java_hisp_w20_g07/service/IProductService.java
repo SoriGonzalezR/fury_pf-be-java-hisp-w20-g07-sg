@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 public interface IProductService {
 
-    InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto);
+    InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto, String username);
 
-    InboundOrderResponseDto update(InboundOrderRequestDto inboundOrderRequestDto);
+    InboundOrderResponseDto update(InboundOrderRequestDto inboundOrderRequestDto, String username);
 }

@@ -6,6 +6,7 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.User;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IUserRepository;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.ISesionService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -99,13 +100,13 @@ public class SesionServiceImpl implements ISesionService {
      * @param token tokenJWT
      * @return Claims
      */
-    /*private static Claims decodeJWT (String token ) {
+    private static Claims decodeJWT (String token ) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY_TOKEN.getBytes())
                 .parseClaimsJws(token)
                 .getBody();
         return claims;
-    }*/
+    }
 
     /**
      * Permite obtener el username según el token indicado
@@ -113,8 +114,8 @@ public class SesionServiceImpl implements ISesionService {
      * @param token token JWT
      * @return String User's Email
      */
-    /*public static String getUsername ( String token ) {
+    public static String getUsername ( String token ) {
         Claims claims = decodeJWT(token);
         return claims.get("sub", String.class);
-    }*/
+    }
 }

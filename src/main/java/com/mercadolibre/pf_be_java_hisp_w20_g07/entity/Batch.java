@@ -1,11 +1,14 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 @Getter
@@ -15,8 +18,8 @@ import java.util.Date;
 public class Batch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer batchNumber;
 
     @Column(name = "initial_quantity")
     private int initialQuantity;
@@ -24,11 +27,11 @@ public class Batch {
     private int currentQuantity;
 
     @Column(name = "minimum_temperature")
-    private double minimumTemperature;
+    private Double minimumTemperature;
 
     @Column(name = "current_temperature")
-    private double currentTemperature;
-    @ManyToOne()
+    private Double currentTemperature;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private Section section;
 
@@ -46,7 +49,8 @@ public class Batch {
     private LocalDate manufacturingDate;
 
     @Column(name = "manufacturing_time")
-    private Time manufacturingTime;
+    @Temporal(TemporalType.TIME)
+    private Date manufacturingTime;
 
     @Column(name = "due_date")
     private LocalDate dueDate;

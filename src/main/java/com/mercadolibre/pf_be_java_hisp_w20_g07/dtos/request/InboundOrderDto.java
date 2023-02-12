@@ -1,5 +1,6 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -20,12 +22,17 @@ import java.util.List;
 @Setter
 public class InboundOrderDto {
 
-    private int OrderNumber;
+    @JsonAlias("order_number")
+    private int id;
 
+    //@JsonDeserialize(using = LocalDateDeserializer.class)
+    //@JsonSerialize(using = LocalDateSerializer.class)
+
+    @JsonAlias("order_date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate orderDate;
+    private LocalDate date;
 
     private SectionDto section;
 

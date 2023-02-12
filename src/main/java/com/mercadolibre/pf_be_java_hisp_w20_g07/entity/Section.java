@@ -30,7 +30,7 @@ public class Section {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "section")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "section", fetch = FetchType.EAGER)
     private List<Batch> batches;
 
 }

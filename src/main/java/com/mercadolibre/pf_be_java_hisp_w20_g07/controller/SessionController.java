@@ -25,7 +25,6 @@ public class SessionController {
      */
     @PostMapping("/log-in")
     public UserResponseDTO login(@RequestBody(required = false) UserRequestDTO user ) {
-        System.out.println(user);
         return service.login(user);
     }
 }
