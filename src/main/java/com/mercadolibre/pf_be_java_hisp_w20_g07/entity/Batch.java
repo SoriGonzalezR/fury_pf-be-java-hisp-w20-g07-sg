@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -38,7 +39,7 @@ public class Batch {
     @Column(name = "manufacturing_date")
     private LocalDate manufacturingDate;
     @Column(name = "manufacturing_time")
-    private Time manufacturingTime;
+    private LocalDateTime manufacturingTime;
     @Column(name = "due_date")
     private LocalDate dueDate;
 
