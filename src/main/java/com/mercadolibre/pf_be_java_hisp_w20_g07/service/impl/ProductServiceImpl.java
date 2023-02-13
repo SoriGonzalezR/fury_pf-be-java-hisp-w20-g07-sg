@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
@@ -191,5 +192,22 @@ public class ProductServiceImpl implements IProductService {
                 }).collect(Collectors.toList()));
 
         return inboundOrderResponseDto;
+    }
+
+    @Override
+    public BatchStockDTO productInStock(Integer idProduct, String username){
+        //validar existenia del producto
+        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
+
+        product.getBatches().stream().map(batch -> batch.getSection().getBatches().size());
+
+
+
+
+
+        //valdiar que un batch exista
+
+
+        return null;
     }
 }

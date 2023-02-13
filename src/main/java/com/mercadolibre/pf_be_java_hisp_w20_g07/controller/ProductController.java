@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -69,11 +70,6 @@ public class ProductController {
     }
     */
     //US_3 Representante
-
-    @GetMapping("/{idProduct/}batch/list")
-    public ResponseEntity<String> r3_1_1(@RequestParam(required = false) Integer idProduct) {
-        
-    }
 
     @GetMapping("/{idProduct}/batch/list")
     public ResponseEntity<String> r3_1_2(@RequestParam(required = false) String idOrder) {
