@@ -1,5 +1,6 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
 @Table(name = "section")
 public class Section {
     @Id

@@ -87,12 +87,10 @@ public class IntegrationTest {
 
     System.out.println(payloadDto);
 
-    UserNotFoundException errorExpected = new UserNotFoundException();
-
     mockMvc.perform(post("/api/v1/log-in")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(payloadDto))
-            .andDo(print()).andExpect(status().is4xxClientError())
+            .andDo(print()).andExpect(status().isUnauthorized())
             .andReturn();
 
   }
