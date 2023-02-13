@@ -67,15 +67,21 @@ public class ProductController {
         String info = "info imortante put /api/v1/fresh-products/orders/{idOrder}";
         return new ResponseEntity(info, HttpStatus.OK);
     }
-
+    */
     //US_3 Representante
 
+    @GetMapping("/{idProduct/}batch/list")
+    public ResponseEntity<String> r3_1_1(@RequestParam(required = false) Integer idProduct) {
+        
+    }
+
     @GetMapping("/{idProduct}/batch/list")
-    public ResponseEntity<String> r3__1_2(@RequestParam(required = false) String idOrder) {
+    public ResponseEntity<String> r3_1_2(@RequestParam(required = false) String idOrder) {
         String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
         return new ResponseEntity(info, HttpStatus.OK);
     }
 
+    /*
     //US 4 Representante
     @GetMapping("/{idProduct}/warehouse/list")
     public ResponseEntity<String> r4__1() {
