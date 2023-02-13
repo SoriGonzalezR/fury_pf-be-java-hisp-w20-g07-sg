@@ -114,7 +114,8 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-        inboundOrder = iInboundOrderRepository.save(inboundOrder);
+
+        iInboundOrderRepository.save(inboundOrder);
 
         InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
 

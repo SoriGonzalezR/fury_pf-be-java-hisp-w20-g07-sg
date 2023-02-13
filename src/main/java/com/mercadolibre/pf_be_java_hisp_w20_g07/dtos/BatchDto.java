@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -54,6 +55,31 @@ public class BatchDto {
     //private InboundOrder inboundOrder;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BatchDto batchDto = (BatchDto) o;
+        return productId == batchDto.productId && Double.compare(batchDto.currentTemperature, currentTemperature) == 0 && Double.compare(batchDto.minimumTemperature, minimumTemperature) == 0 && initialQuantity == batchDto.initialQuantity && currentQuantity == batchDto.currentQuantity && Objects.equals(batchNumber, batchDto.batchNumber) && Objects.equals(manufacturingDate, batchDto.manufacturingDate) && Objects.equals(manufacturingTime, batchDto.manufacturingTime) && Objects.equals(dueDate, batchDto.dueDate);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(batchNumber, productId, currentTemperature, minimumTemperature, initialQuantity, currentQuantity, manufacturingDate, manufacturingTime, dueDate);
+    }
 
+    @Override
+    public String toString() {
+        return "BatchDto{" +
+                "batchNumber=" + batchNumber +
+                ", productId=" + productId +
+                ", currentTemperature=" + currentTemperature +
+                ", minimumTemperature=" + minimumTemperature +
+                ", initialQuantity=" + initialQuantity +
+                ", currentQuantity=" + currentQuantity +
+                ", manufacturingDate=" + manufacturingDate +
+                ", manufacturingTime=" + manufacturingTime +
+                ", dueDate=" + dueDate +
+                '}';
+    }
 }

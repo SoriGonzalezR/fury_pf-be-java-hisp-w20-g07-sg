@@ -4,11 +4,13 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IWarehouseService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.ProductServiceImpl;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.unit.utils.Utils;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,17 +80,23 @@ public class Requerimiento1Test {
         User user = Utils.users().get(0);
         Section section = Utils.sections().get(0);
         Product product = Utils.products().get(0);
-
+        InboundOrder inboundOrder1 = Utils.inboundOrders().get(0);
+        InboundOrder inboundOrder2 = Utils.inboundOrders().get(1);
         //Act
         when(warehouseService.findById(1)).thenReturn(Optional.ofNullable(mockWarehouse));
         when(userRepository.findUserByUsername(username)).thenReturn(Optional.ofNullable(user));
         when(sectionRepository.findSectionByIdAndWarehouse(1,mockWarehouse)).thenReturn(Optional.ofNullable(section));
         when(productRepository.findById(1)).thenReturn(Optional.ofNullable(product));
         when(productRepository.findById(2)).thenReturn(Optional.ofNullable(product));
-        //when(iInboundOrderRepository.save())
+        //when(iInboundOrderRepository.save(inboundOrder1)).thenReturn(inboundOrder1);
+        //doReturn(inboundOrder2).when(iInboundOrderRepository.save(inboundOrder2));
 
-        productService.save(inboundOrderRequestDto,username);
+
+
+        InboundOrderResponseDto actual = productService.save(inboundOrderRequestDto,username);
 
         //Assert
+
+        Assert.assertEquals(inboundOrderDto.getBatchStock(),actual.getBatchStock());
     }
 }

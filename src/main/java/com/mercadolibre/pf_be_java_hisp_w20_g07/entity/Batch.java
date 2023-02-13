@@ -37,7 +37,7 @@ public class Batch {
 
     @Column(name = "current_temperature")
     private Double currentTemperature;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "section_id")
     private Section section;
 
