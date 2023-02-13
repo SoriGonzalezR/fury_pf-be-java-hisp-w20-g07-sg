@@ -25,7 +25,6 @@ public class Section {
     @ManyToOne()
     @JoinColumn(name = "warehouse_id")
     private WareHouse warehouse;
-
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;

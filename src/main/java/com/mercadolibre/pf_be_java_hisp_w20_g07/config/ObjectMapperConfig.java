@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -38,6 +39,7 @@ public class ObjectMapperConfig {
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     objectMapper.setDateFormat(sdf);
+    objectMapper.registerModule(new JavaTimeModule());
     return objectMapper;
   }
 

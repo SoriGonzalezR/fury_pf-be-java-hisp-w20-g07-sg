@@ -28,13 +28,12 @@ public class Batch {
     @JoinColumn(name = "section_id")
     private Section section;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "inbound_order_id")
     private InboundOrder inboundOrder;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "product_id")
-
     private Product product;
     @Column(name = "manufacturing_date")
     private LocalDate manufacturingDate;
