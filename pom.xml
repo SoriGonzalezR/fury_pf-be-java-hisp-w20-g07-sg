@@ -63,16 +63,18 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>**/com/mercadolibre/**/dto/**</exclude>
+            <exclude>**/com/mercadolibre/**/dtos/**</exclude>
             <exclude>**/com/mercadolibre/**/api/**</exclude>
             <exclude>**/com/mercadolibre/**/model/**</exclude>
             <exclude>**/com/mercadolibre/**/exceptions/**</exclude>
             <exclude>**/com/mercadolibre/**/entity/**</exclude>
             <exclude>**/com/mercadolibre/**/security/JWTAuthorizationFilter.class</exclude>
+            <exclude>**/com/mercadolibre/**/config/ControllerExceptionHandler.class**</exclude>
             <exclude>**/com/mercadolibre/**/config/DataSourceConfig.class</exclude>
             <exclude>**/com/mercadolibre/**/service/**</exclude>
             <exclude>**/com/mercadolibre/**/controller/**</exclude>
             <exclude>**/com/mercadolibre/**/repository/**</exclude>
+
           </excludes>
         </configuration>
       </plugin>
@@ -280,10 +282,6 @@
       <artifactId>springdoc-openapi-ui</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.newrelic.agent.java</groupId>
-      <artifactId>newrelic-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
@@ -362,9 +360,19 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.13.3</version>
     </dependency>
   </dependencies>
   <repositories>
