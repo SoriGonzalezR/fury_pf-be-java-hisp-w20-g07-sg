@@ -63,18 +63,18 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>**/com/mercadolibre/**/dto/**</exclude>
+            <exclude>**/com/mercadolibre/**/dtos/**</exclude>
             <exclude>**/com/mercadolibre/**/api/**</exclude>
             <exclude>**/com/mercadolibre/**/model/**</exclude>
             <exclude>**/com/mercadolibre/**/exceptions/**</exclude>
             <exclude>**/com/mercadolibre/**/entity/**</exclude>
             <exclude>**/com/mercadolibre/**/security/JWTAuthorizationFilter.class</exclude>
             <exclude>**/com/mercadolibre/**/config/ControllerExceptionHandler.class**</exclude>
-            <exclude>**/com/mercadolibre/**/config/ObjectMapperConfig.class**</exclude>
             <exclude>**/com/mercadolibre/**/config/DataSourceConfig.class</exclude>
             <exclude>**/com/mercadolibre/**/service/**</exclude>
             <exclude>**/com/mercadolibre/**/controller/**</exclude>
             <exclude>**/com/mercadolibre/**/repository/**</exclude>
+
           </excludes>
         </configuration>
       </plugin>
