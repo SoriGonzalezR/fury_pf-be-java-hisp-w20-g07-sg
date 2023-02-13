@@ -92,7 +92,7 @@ public class IntegrationTest {
     mockMvc.perform(post("/api/v1/log-in")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(payloadDto))
-            .andDo(print()).andExpect(status().is5xxServerError())
+            .andDo(print()).andExpect(status().is4xxClientError())
             .andReturn();
 
   }

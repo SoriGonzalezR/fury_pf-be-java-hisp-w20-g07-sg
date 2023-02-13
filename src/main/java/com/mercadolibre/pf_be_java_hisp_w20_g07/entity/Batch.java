@@ -8,7 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.Calendar;
 import java.util.Date;
 
 @Getter
@@ -44,13 +46,13 @@ public class Batch {
     private Product product;
 
     //rework
-
     @Column(name = "manufacturing_date")
     private LocalDate manufacturingDate;
 
+    //@Temporal(TemporalType.TIME)
     @Column(name = "manufacturing_time")
-    @Temporal(TemporalType.TIME)
-    private Date manufacturingTime;
+    //@Temporal(TemporalType.TIME)
+    private LocalDateTime manufacturingTime;
 
     @Column(name = "due_date")
     private LocalDate dueDate;
