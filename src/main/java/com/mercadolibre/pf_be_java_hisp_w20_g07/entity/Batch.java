@@ -53,17 +53,6 @@ public class Batch {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    //rework
-    @Column(name = "manufacturing_date")
-    private LocalDate manufacturingDate;
-
-    //@Temporal(TemporalType.TIME)
-    @Column(name = "manufacturing_time")
-    //@Temporal(TemporalType.TIME)
-    private LocalDateTime manufacturingTime;
-
-    @Column(name = "due_date")
-    private LocalDate dueDate;
 
 
 }

@@ -30,10 +30,10 @@ VALUES (1, 'warehouse1', 'Colombia', 'Bogota', 'cll 185 #10-3', 1),
 INSERT INTO section (id, warehouse_id, minimum_temperature, maximum_temperature, maximum_batch_quantity, category_id)
 VALUES (1, 1, 10.0, 18.0, 10, 1),
        (2, 1, 0.0, 10.0, 10, 2),
-       (3, 1, -10, 0.0, 10, 3);
-      -- (4, 2, 10.0, 18.0, 10, 1),
-      -- (5, 2, 0.0, 10.0, 10, 2),
-       --(6, 2, -10, 0.0, 10, 3);
+       (3, 1, -10, 0.0, 10, 3),
+       (4, 2, 10.0, 18.0, 10, 1),
+       (5, 2, 0.0, 10.0, 10, 2),
+       (6, 2, -10, 0.0, 10, 3);
 
 INSERT INTO inbound_order (id, date)
 VALUES (1, now()),

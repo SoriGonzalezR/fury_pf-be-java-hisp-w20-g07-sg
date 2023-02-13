@@ -34,32 +34,35 @@ public class ProductServiceImpl implements IProductService {
 
     
 
-    @Autowired
     IWarehouseRepository warehouseRepository;
 
-    @Autowired
     ISectionRepository sectionRepository;
 
-    @Autowired
     IInboundOrderRepository iInboundOrderRepository;
 
-    @Autowired
     IBatchRepository batchRepository;
     
     IProductRepository productRepository;
-    IUsersRepository usersRepository;
+    IUserRepository userRepository;
     IPurchaseOrderRepository purchaseOrderRepository;
     IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository;
     IOrderStatusRepository orderStatusRepository;
     ModelMapper modelMapper = new ModelMapper();
 
-    public ProductServiceImpl(IProductRepository productRepository, IUsersRepository usersRepository, IPurchaseOrderRepository purchaseOrderRepository, IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository, IOrderStatusRepository orderStatusRepository) {
+
+    public ProductServiceImpl(IWarehouseRepository warehouseRepository, ISectionRepository sectionRepository, IInboundOrderRepository iInboundOrderRepository, IBatchRepository batchRepository, IProductRepository productRepository, IUserRepository userRepository, IPurchaseOrderRepository purchaseOrderRepository, IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository, IOrderStatusRepository orderStatusRepository) {
+        this.warehouseRepository = warehouseRepository;
+        this.sectionRepository = sectionRepository;
+        this.iInboundOrderRepository = iInboundOrderRepository;
+        this.batchRepository = batchRepository;
         this.productRepository = productRepository;
-        this.usersRepository = usersRepository;
+        this.userRepository = userRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderHasProductRepository = purchaseOrderHasProductRepository;
         this.orderStatusRepository = orderStatusRepository;
     }
+
+
     
     private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
 
@@ -116,7 +119,7 @@ public class ProductServiceImpl implements IProductService {
             mapBatchDtoToBatch(batchDto,batch,section,inboundOrder);
 
 
-            //validar que no existan los lostes entranetes
+            //validar que no existan los lotes entrantes
             if(batchRepository.existsById(batchDto.getBatchNumber())){
                 throw new ResourceNotFoundException("Batch with id " + batchDto.getBatchNumber() + " already exist");
             }
@@ -226,10 +229,10 @@ public class ProductServiceImpl implements IProductService {
         List<PurchaseOrderHasProduct> purchaseOrderHasProductList = new ArrayList<>();
         List<ProductDTO> productsIncorrectQuantity = new ArrayList<>();
         List<ProductDTO> productsDueThreeWeeks = new ArrayList<>();
-        if (!usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
+        if (!userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
             throw new NotFoundException("buyer doesn't exist");
         }
-        User user = usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
+        User user = userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
 
         for (int i = 0; i < productsDTOS.size(); i++) {
             if (productRepository.findCurrentQuantityByProductId(productsDTOS.get(i).getProductId()) < productsDTOS.get(i).getQuantity()) {
@@ -286,13 +289,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public String updateOrder(int orderId, PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
-        if (purchaseOrderRequestDTO.getOrderStatus().getStatusCode().equals("carrito") && usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
+        if (purchaseOrderRequestDTO.getOrderStatus().getStatusCode().equals("carrito") && userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
             Optional<PurchaseOrder> purchaseOrderToUpdate = purchaseOrderRepository.findById(orderId);
             List<Integer> productIdCurrent = new ArrayList<>();
             //Current List from db
             List<PurchaseOrderHasProduct> purchaseOrderHasProductList = purchaseOrderHasProductRepository.findByPurchaseOrder(orderId);
             if (purchaseOrderToUpdate.isPresent()) {
-                User user = usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
+                User user = userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
                 System.out.println(purchaseOrderToUpdate.get().getDate());
                 purchaseOrderToUpdate.get().setDate(purchaseOrderRequestDTO.getDate());
                 purchaseOrderToUpdate.get().setUser(user);
