@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -196,6 +197,16 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public BatchStockDTO productInStock(Integer idProduct, String username){
+
+        //validacion representante-warehouse valido
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException());
+
+        Integer idWarehouse = user.getWareHouse().getId();
+
+        warehouseService.findById(idWarehouse);
+
+
+
         //validar existenia del producto
         Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
 
