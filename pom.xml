@@ -374,6 +374,13 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>2.13.3</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+
   </dependencies>
   <repositories>
     <repository>

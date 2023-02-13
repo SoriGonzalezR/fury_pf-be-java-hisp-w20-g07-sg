@@ -23,6 +23,8 @@ public class Role {
     @Column(name = "user_role")
     private String userRole;
 
+    //@ManyToOne ToOne(cascade = CascadeType.ALL,mappedBy = "role")
+
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "role")
     private List<User> user;
 

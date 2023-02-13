@@ -1,42 +1,59 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
+
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
+
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductOrderResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.PurchaseOrderResponseDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/fresh-products")
 public class ProductController {
 
-    private IProductService productService;
+    IProductService productService;
 
     public ProductController(IProductService productService) {
         this.productService = productService;
     }
 
+    //US_1 Representante
+    @PostMapping("/inboundorder")
+    public ResponseEntity<InboundOrderResponseDto> r1__1(
+            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestHeader Map<String, String> headers){
+
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
+        return new ResponseEntity(productService.save(inboundOrderRequestDto,username), HttpStatus.OK);
+    }
+
+    @PutMapping("/inboundorder")
+    public ResponseEntity<InboundOrderResponseDto> r1__2(
+            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestHeader Map<String, String> headers){
+
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
+        return new ResponseEntity(productService.update(inboundOrderRequestDto,username), HttpStatus.OK);
+    }
+
     /*
-        //US_1 Representante
-        @PostMapping("/inboundorder")
-        public ResponseEntity<String> r1_1() {
-            String info = "info imortante post /api/v1/fresh-products/inboundorder";
-            return new ResponseEntity(info, HttpStatus.OK);
-        }
 
-        @PutMapping("/inboundorder")
-        public ResponseEntity<String> r1_2() {
-            String info = "info imortante put /api/v1/fresh-products/inboundorder";
-            return new ResponseEntity(info, HttpStatus.OK);
-        }
+    //US_2 buyer
 
-        //US_2 buyer
-*/
+
     @GetMapping("/list")
     public ResponseEntity<List<ProductResponseDTO>> findProductByCategory(@RequestParam(required = false) String code) {
         if (code == null) {

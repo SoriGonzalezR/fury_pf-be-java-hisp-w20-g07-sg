@@ -14,12 +14,7 @@ import java.util.List;
 @Table(name = "usuarios")
 public class User {
 
-    public User(Integer id, String user, String password, Role role) {
-        this.id = id;
-        this.username = user;
-        this.password = password;
-        this.role = role;
-    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

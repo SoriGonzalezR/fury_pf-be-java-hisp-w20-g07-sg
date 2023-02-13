@@ -1,5 +1,15 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
+
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.ProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductOrderResponseDTO;
@@ -15,26 +25,190 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
+
+    
+
+    IWarehouseRepository warehouseRepository;
+
+    ISectionRepository sectionRepository;
+
+    IInboundOrderRepository iInboundOrderRepository;
+
+    IBatchRepository batchRepository;
+    
     IProductRepository productRepository;
-    IUsersRepository usersRepository;
+    IUserRepository userRepository;
     IPurchaseOrderRepository purchaseOrderRepository;
     IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository;
     IOrderStatusRepository orderStatusRepository;
     ModelMapper modelMapper = new ModelMapper();
 
-    public ProductServiceImpl(IProductRepository productRepository, IUsersRepository usersRepository, IPurchaseOrderRepository purchaseOrderRepository, IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository, IOrderStatusRepository orderStatusRepository) {
+
+    public ProductServiceImpl(IWarehouseRepository warehouseRepository, ISectionRepository sectionRepository, IInboundOrderRepository iInboundOrderRepository, IBatchRepository batchRepository, IProductRepository productRepository, IUserRepository userRepository, IPurchaseOrderRepository purchaseOrderRepository, IPurchaseOrderHasProductRepository purchaseOrderHasProductRepository, IOrderStatusRepository orderStatusRepository) {
+        this.warehouseRepository = warehouseRepository;
+        this.sectionRepository = sectionRepository;
+        this.iInboundOrderRepository = iInboundOrderRepository;
+        this.batchRepository = batchRepository;
         this.productRepository = productRepository;
-        this.usersRepository = usersRepository;
+        this.userRepository = userRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderHasProductRepository = purchaseOrderHasProductRepository;
         this.orderStatusRepository = orderStatusRepository;
     }
 
+
+    
+    private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
+
+        batch.setSection(section);
+        batch.setInboundOrder(inboundOrder);
+
+        //validar existenia del producto
+        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + batchDto.getProductId() +" not found"));
+        batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
+
+        return batch;
+    }
+
+
+    @Override
+    public InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto,String username) {
+
+        //Validacion de que el warehouse sea valido
+        WareHouse wareHouse = warehouseRepository.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
+                .orElseThrow(() -> new ResourceNotFoundException("warehouse not found"));
+
+        //validacion representante-warehouse valido
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException());
+
+        if(!user.getWareHouse().getId().equals(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())){
+            throw new ResourceNotFoundException("the user does not belong to the warehouse");
+        }
+
+        //validacion de quela seccion sea valida
+        Section section = sectionRepository.findSectionByIdAndWarehouse(inboundOrderRequestDto.getInboundOrder().getSection().getSectionCode(),wareHouse)
+                .orElseThrow(() -> new ResourceNotFoundException("the section does not belong to the warehouse"));
+
+        //validacion de que los lotes correspondan a su respectivo warehouse
+        inboundOrderRequestDto.getInboundOrder().getBatchStock().forEach(b -> {
+           if(b.getMinimumTemperature() < section.getMinimumTemperature() || b.getMinimumTemperature() > section.getMaximumTemperature()){
+               throw new ResourceNotFoundException("batch with id " + b.getBatchNumber() + " doesn't belong to the section");
+           }
+        });
+
+        //validar que la seccion tenga espacio
+        if((section.getBatches().size() + inboundOrderRequestDto.getInboundOrder().getBatchStock().size() > section.getMaximumBatchQuantity())){
+            throw new ResourceNotFoundException("there isn't space for all new batches");
+        }
+
+
+        InboundOrder inboundOrder = modelMapper.map(inboundOrderRequestDto.getInboundOrder(),InboundOrder.class);
+
+        //mapeo de batchesDTO a batches
+        for(int i = 0; i < inboundOrderRequestDto.getInboundOrder().getBatchStock().size();i++){
+
+            BatchDto batchDto = inboundOrderRequestDto.getInboundOrder().getBatchStock().get(i);
+            Batch batch = inboundOrder.getBatchStock().get(i);
+
+            mapBatchDtoToBatch(batchDto,batch,section,inboundOrder);
+
+
+            //validar que no existan los lotes entrantes
+            if(batchRepository.existsById(batchDto.getBatchNumber())){
+                throw new ResourceNotFoundException("Batch with id " + batchDto.getBatchNumber() + " already exist");
+            }
+        }
+
+
+         inboundOrder = iInboundOrderRepository.save(inboundOrder);
+
+        InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
+
+        //mapeo de batches batchesDto
+        inboundOrderResponseDto.setBatchStock(
+                inboundOrder.getBatchStock().stream().map(e -> {
+                    int productId = e.getProduct().getId();
+                    BatchDto dto = modelMapper.map(e, BatchDto.class);
+                    dto.setProductId(productId);
+                    return dto;
+                }).collect(Collectors.toList()));
+
+        return inboundOrderResponseDto;
+    }
+
+    @Override
+    public InboundOrderResponseDto update(InboundOrderRequestDto inboundOrderRequestDto, String username) {
+        //Validacion de que el warehouse sea valido
+        WareHouse wareHouse = warehouseRepository.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
+                .orElseThrow(() -> new ResourceNotFoundException("warehouse not found"));
+
+        //validacion representante-warehouse valido
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException());
+
+        if(!user.getWareHouse().getId().equals(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())){
+            throw new ResourceNotFoundException("the user does not belong to the warehouse");
+        }
+
+        //validacion de quela seccion sea valida
+        Section section = sectionRepository.findSectionByIdAndWarehouse(inboundOrderRequestDto.getInboundOrder().getSection().getSectionCode(),wareHouse)
+                .orElseThrow(() -> new ResourceNotFoundException("the section does not belong to the warehouse"));
+
+        //validacion de que los lotes correspondan a su respectivo warehouse
+        inboundOrderRequestDto.getInboundOrder().getBatchStock().forEach(b -> {
+            if(b.getMinimumTemperature() < section.getMinimumTemperature() || b.getMinimumTemperature() > section.getMaximumTemperature()){
+                throw new ResourceNotFoundException("batch with id " + b.getBatchNumber() + " doesn't belong to the section");
+            }
+        });
+
+        //validar que la seccion tenga espacio
+        if((section.getBatches().size() + inboundOrderRequestDto.getInboundOrder().getBatchStock().size() > section.getMaximumBatchQuantity())){
+            throw new ResourceNotFoundException("there isn't space for all new batches");
+        }
+
+
+        InboundOrder inboundOrder = modelMapper.map(inboundOrderRequestDto.getInboundOrder(),InboundOrder.class);
+
+        //mapeo de batchesDTO a batches
+        for(int i = 0; i < inboundOrderRequestDto.getInboundOrder().getBatchStock().size();i++){
+
+            BatchDto batchDto = inboundOrderRequestDto.getInboundOrder().getBatchStock().get(i);
+            Batch batch = inboundOrder.getBatchStock().get(i);
+
+            mapBatchDtoToBatch(batchDto,batch,section,inboundOrder);
+
+            //validar existan los lotes entrantes
+            if(!batchRepository.existsById(batchDto.getBatchNumber())){
+                throw new ResourceNotFoundException("Batch with id " + batchDto.getBatchNumber() + " not exist");
+            }
+
+            //eliminar lotes que coincidan con los lotes entrantes
+            if(batchRepository.existsById(batchDto.getBatchNumber())){
+                batchRepository.deleteById(batchDto.getBatchNumber());
+            }
+        }
+
+        iInboundOrderRepository.save(inboundOrder);
+
+        InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
+
+        //mapeo de batches batchesDto
+        inboundOrderResponseDto.setBatchStock(
+                inboundOrder.getBatchStock().stream().map(e -> {
+                    int productId = e.getProduct().getId();
+                    BatchDto dto = modelMapper.map(e, BatchDto.class);
+                    dto.setProductId(productId);
+                    return dto;
+                }).collect(Collectors.toList()));
+
+        return inboundOrderResponseDto;
+    }
+    
     @Override
     public List<ProductResponseDTO> getProducts() {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductResponseDTO.class)).collect(Collectors.toList());
@@ -55,10 +229,10 @@ public class ProductServiceImpl implements IProductService {
         List<PurchaseOrderHasProduct> purchaseOrderHasProductList = new ArrayList<>();
         List<ProductDTO> productsIncorrectQuantity = new ArrayList<>();
         List<ProductDTO> productsDueThreeWeeks = new ArrayList<>();
-        if (!usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
+        if (!userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
             throw new NotFoundException("buyer doesn't exist");
         }
-        User user = usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
+        User user = userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
 
         for (int i = 0; i < productsDTOS.size(); i++) {
             if (productRepository.findCurrentQuantityByProductId(productsDTOS.get(i).getProductId()) < productsDTOS.get(i).getQuantity()) {
@@ -115,13 +289,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public String updateOrder(int orderId, PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
-        if (purchaseOrderRequestDTO.getOrderStatus().getStatusCode().equals("carrito") && usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
+        if (purchaseOrderRequestDTO.getOrderStatus().getStatusCode().equals("carrito") && userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).isPresent()) {
             Optional<PurchaseOrder> purchaseOrderToUpdate = purchaseOrderRepository.findById(orderId);
             List<Integer> productIdCurrent = new ArrayList<>();
             //Current List from db
             List<PurchaseOrderHasProduct> purchaseOrderHasProductList = purchaseOrderHasProductRepository.findByPurchaseOrder(orderId);
             if (purchaseOrderToUpdate.isPresent()) {
-                User user = usersRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
+                User user = userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
                 System.out.println(purchaseOrderToUpdate.get().getDate());
                 purchaseOrderToUpdate.get().setDate(purchaseOrderRequestDTO.getDate());
                 purchaseOrderToUpdate.get().setUser(user);
@@ -166,6 +340,7 @@ public class ProductServiceImpl implements IProductService {
         }
         return "update";
     }
+
 
 }
 

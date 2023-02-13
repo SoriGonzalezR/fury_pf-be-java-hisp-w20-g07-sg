@@ -1,8 +1,10 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.config;
 
-import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ApiError;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ApiException;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.NotFoundException;
+
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.MessageDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.*;
+
+
 import com.newrelic.api.agent.NewRelic;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -80,6 +82,26 @@ public class ControllerExceptionHandler {
             "internal_error", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value());
     return ResponseEntity.status(apiError.getStatus()).body(apiError);
   }
+
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  protected ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e){
+
+    return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  protected ResponseEntity<?> userNotFoundException(UserNotFoundException e){
+
+    return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UnAuthorizeException.class)
+  protected ResponseEntity<?> UnAuthorizeException(UnAuthorizeException e){
+
+    return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.UNAUTHORIZED);
+  }
+
 
 
 }
