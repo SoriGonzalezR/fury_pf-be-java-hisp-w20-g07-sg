@@ -15,10 +15,10 @@ public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @Column(name = "status")
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "orderStatus")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderStatus", fetch = FetchType.EAGER)
     private List<PurchaseOrder> purchaseOrders;
 
 }

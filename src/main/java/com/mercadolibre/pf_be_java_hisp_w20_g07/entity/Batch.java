@@ -11,8 +11,6 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Calendar;
 import java.util.Date;
 
 @Getter
@@ -41,13 +39,19 @@ public class Batch {
     @JoinColumn(name = "section_id")
     private Section section;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "inbound_order_id")
     private InboundOrder inboundOrder;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @Column(name = "manufacturing_date")
+    private LocalDate manufacturingDate;
+    @Column(name = "manufacturing_time")
+    private LocalDateTime manufacturingTime;
+    @Column(name = "due_date")
+    private LocalDate dueDate;
 
     //rework
     @Column(name = "manufacturing_date")

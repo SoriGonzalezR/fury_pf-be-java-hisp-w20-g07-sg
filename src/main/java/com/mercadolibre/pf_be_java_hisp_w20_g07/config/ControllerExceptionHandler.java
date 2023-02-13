@@ -1,7 +1,10 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.config;
 
+
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.MessageDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.*;
+
+
 import com.newrelic.api.agent.NewRelic;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -20,6 +23,10 @@ public class ControllerExceptionHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<String> notFoundException(NotFoundException e){
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+  }
   /**
    * Handler for not found routes.
    * 
@@ -76,6 +83,7 @@ public class ControllerExceptionHandler {
     return ResponseEntity.status(apiError.getStatus()).body(apiError);
   }
 
+
   @ExceptionHandler(ResourceNotFoundException.class)
   protected ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e){
 
@@ -93,6 +101,7 @@ public class ControllerExceptionHandler {
 
     return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.UNAUTHORIZED);
   }
+
 
 
 }

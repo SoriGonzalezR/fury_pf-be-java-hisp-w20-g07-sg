@@ -24,6 +24,7 @@ public class Role {
     private String userRole;
 
     //@ManyToOne ToOne(cascade = CascadeType.ALL,mappedBy = "role")
+
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "role")
     private List<User> user;
 

@@ -1,14 +1,23 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
+
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
+
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductOrderResponseDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductResponseDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.PurchaseOrderResponseDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+
+import java.util.List;
 
 
 @RestController
@@ -44,30 +53,30 @@ public class ProductController {
 
     //US_2 buyer
 
+
     @GetMapping("/list")
-    public ResponseEntity<String> r2__1_2(@RequestParam(required = false) String category) {
-        String info = "info imortante get /api/v1/fresh-products/list?category={FS, RF, FF}";
-        return new ResponseEntity(info, HttpStatus.OK);
+    public ResponseEntity<List<ProductResponseDTO>> findProductByCategory(@RequestParam(required = false) String code) {
+        if (code == null) {
+            return new ResponseEntity(productService.getProducts(), HttpStatus.OK);
+        }
+        return new ResponseEntity(productService.getProductsByCategory(code), HttpStatus.OK);
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<String> r2_3(@RequestParam String category) {
-        String info = "info imortante post /api/v1/fresh-products/orders";
-        return new ResponseEntity(info, HttpStatus.OK);
+    public ResponseEntity<PurchaseOrderResponseDTO> createOrder(@RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
+        return new ResponseEntity(productService.createPurchaseOrder(purchaseOrderRequestDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/orders/{idOrder}")
-    public ResponseEntity<String> r2_4(@PathVariable int idOrder) {
-        String info = "info imortante get /api/v1/fresh-products/orders/{idOrder}";
-        return new ResponseEntity(info, HttpStatus.OK);
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<List<ProductOrderResponseDTO>> findProductsByOrder(@PathVariable int orderId) {
+        return new ResponseEntity(productService.getOrder(orderId), HttpStatus.OK);
     }
 
-    @PutMapping("/orders/{idOrder}")
-    public ResponseEntity<String> r2_5(@PathVariable int idOrder) {
-        String info = "info imortante put /api/v1/fresh-products/orders/{idOrder}";
-        return new ResponseEntity(info, HttpStatus.OK);
+    @PutMapping("/orders/{orderId}")
+    public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
+        return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
-
+/*
     //US_3 Representante
 
     @GetMapping("/{idProduct}/batch/list")
@@ -96,15 +105,6 @@ public class ProductController {
         String info = "info imortante get /api/v1/fresh-products/batch/list/due-date/{cantDays}?category = {FS, RF, FF}&order = {date_asc, date_desc}}";
         return new ResponseEntity(info, HttpStatus.OK);
     }*/
-
-
-
-
-
-
-
-
-
 
 
 }
