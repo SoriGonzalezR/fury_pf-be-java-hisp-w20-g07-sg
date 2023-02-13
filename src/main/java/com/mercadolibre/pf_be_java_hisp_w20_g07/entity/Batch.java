@@ -24,7 +24,7 @@ import java.util.Date;
 public class Batch {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer batchNumber;
 
     @Column(name = "initial_quantity")
