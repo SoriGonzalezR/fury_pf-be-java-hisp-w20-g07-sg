@@ -1,11 +1,6 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
@@ -13,22 +8,17 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundExcep
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IWarehouseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
     @Autowired
-    IWarehouseService warehouseService;
+    IWarehouseRepository warehouseRepository;
 
     @Autowired
     IUserRepository userRepository;
@@ -70,7 +60,7 @@ public class ProductServiceImpl implements IProductService {
     public InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto,String username) {
 
         //Validacion de que el warehouse sea valido
-        WareHouse wareHouse = warehouseService.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
+        WareHouse wareHouse = warehouseRepository.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
                 .orElseThrow(() -> new ResourceNotFoundException("warehouse not found"));
 
         //validacion representante-warehouse valido
@@ -115,7 +105,7 @@ public class ProductServiceImpl implements IProductService {
         }
 
 
-        iInboundOrderRepository.save(inboundOrder);
+         inboundOrder = iInboundOrderRepository.save(inboundOrder);
 
         InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
 
@@ -134,7 +124,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public InboundOrderResponseDto update(InboundOrderRequestDto inboundOrderRequestDto, String username) {
         //Validacion de que el warehouse sea valido
-        WareHouse wareHouse = warehouseService.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
+        WareHouse wareHouse = warehouseRepository.findById(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode())
                 .orElseThrow(() -> new ResourceNotFoundException("warehouse not found"));
 
         //validacion representante-warehouse valido
@@ -171,6 +161,10 @@ public class ProductServiceImpl implements IProductService {
 
             mapBatchDtoToBatch(batchDto,batch,section,inboundOrder);
 
+            //validar existan los lotes entrantes
+            if(!batchRepository.existsById(batchDto.getBatchNumber())){
+                throw new ResourceNotFoundException("Batch with id " + batchDto.getBatchNumber() + " not exist");
+            }
 
             //eliminar lotes que coincidan con los lotes entrantes
             if(batchRepository.existsById(batchDto.getBatchNumber())){
@@ -178,7 +172,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-        inboundOrder = iInboundOrderRepository.save(inboundOrder);
+        iInboundOrderRepository.save(inboundOrder);
 
         InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
 
