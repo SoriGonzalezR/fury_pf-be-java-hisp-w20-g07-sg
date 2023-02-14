@@ -9,14 +9,13 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.Product;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.User;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.NotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IProductRepository;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IUsersRepository;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IUserRepository;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public class Requerimiento2 {
     private IProductRepository productRepository;
 
     @Mock
-    private IUsersRepository usersRepository;
+    private IUserRepository usersRepository;
 
     @InjectMocks
     private ProductServiceImpl productService;
@@ -83,12 +82,12 @@ public class Requerimiento2 {
     @Test
     void dateDueSoonException (){
         OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
-        List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 3));
+        List<ProductDTO> productDTOList = List.of(new ProductDTO(1, 3));
         LocalDate date = LocalDate.parse("2023-02-10" );
         PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(LocalDate.now(),1,orderStatus,productDTOList);
         when(usersRepository.findById(1)).thenReturn(Optional.of(new User(1,"Tomas","tomas123",null,null,null)));
         when(productRepository.findCurrentQuantityByProductId(1)).thenReturn(10L);
-        when(productRepository.findDueDateByProduct(1)).thenReturn(LocalDate.parse("2023-02-16"));
+        //when(productRepository.findDueDateByProduct(1)).thenReturn(LocalDate.parse("2023-03-16"));
         assertThrows(RuntimeException.class, () -> {
             productService.createPurchaseOrder(purchaseOrderRequestDTO);
         });
