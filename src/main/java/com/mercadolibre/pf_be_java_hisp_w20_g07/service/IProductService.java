@@ -10,5 +10,5 @@ public interface IProductService {
 
     InboundOrderResponseDto update(InboundOrderRequestDto inboundOrderRequestDto, String username);
 
-    BatchStockDTO productInStock(Integer idProduct, String username);
+    BatchStockDTO productInStock(Integer idProduct, String order, String username);
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -45,6 +46,8 @@ public class ProductServiceImpl implements IProductService {
     IBatchRepository batchRepository;
 
     ModelMapper modelMapper;
+
+
 
     public ProductServiceImpl() {
 
@@ -193,7 +196,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public BatchStockDTO productInStock(Integer idProduct, String username){
+    public BatchStockDTO productInStock(Integer idProduct, String order, String username){
 
         //validar existenia del producto
         Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product with id " + idProduct +" not found"));
@@ -251,10 +254,38 @@ public class ProductServiceImpl implements IProductService {
         }
 
         // DATA SIN ORDER
-        batchStockDTO.setBatchStock(batchProductDTOList);
+        if (order == null){
+            batchStockDTO.setBatchStock(batchProductDTOList);
 
-        // CON ORDER
+            // CON ORDER
+        } else {
+            if (order.equals("L")){
+                Comparator<BatchProductDTO> compareByBatch = Comparator
+                        .comparing(BatchProductDTO::getBatch_number);
 
+                List<BatchProductDTO>  listByBatch = batchProductDTOList.stream().sorted(compareByBatch).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByBatch);
+
+
+            } else if (order.equals("C")) {
+                Comparator<BatchProductDTO> compareByQuantity = Comparator
+                        .comparing(BatchProductDTO::getCurrent_quantity);
+                List<BatchProductDTO>  listByQuantity = batchProductDTOList.stream().sorted(compareByQuantity).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByQuantity);
+
+            } else if (order.equals("F")) {
+                Comparator<BatchProductDTO> compareByDueDate = Comparator
+                        .comparing(BatchProductDTO::getDue_date);
+
+
+                List<BatchProductDTO>  listByDueDate = batchProductDTOList.stream().sorted(compareByDueDate).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByDueDate);
+
+            } else {
+                throw new BatchNotFoundException("Invalid order");
+            }
+
+        }
 
         return batchStockDTO;
     }

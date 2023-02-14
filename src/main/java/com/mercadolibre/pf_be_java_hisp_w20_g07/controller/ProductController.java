@@ -72,17 +72,11 @@ public class ProductController {
     //US_3 Representante
 
     @GetMapping("/{idProduct}/batch/list")
-    public ResponseEntity<BatchStockDTO> getProductInStock(@PathVariable Integer idProduct, @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<BatchStockDTO> getProductInStock(@PathVariable Integer idProduct, @RequestParam(required = false) String order, @RequestHeader Map<String, String> headers) {
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
-        return new ResponseEntity(productService.productInStock(idProduct, username), HttpStatus.OK);
+        return new ResponseEntity(productService.productInStock(idProduct, order, username), HttpStatus.OK);
     }
 
-    @GetMapping("/{idProduct}/batch/list")
-    public ResponseEntity<BatchStockDTO> getProductInStockOrder(@PathVariable Integer idProduct, @RequestParam(required = false) String order, @RequestHeader Map<String, String> headers) {
-        //String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
-        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
-        return new ResponseEntity(productService.productInStock(idProduct, username), HttpStatus.OK);
-    }
 
     /*
     //US 4 Representante
