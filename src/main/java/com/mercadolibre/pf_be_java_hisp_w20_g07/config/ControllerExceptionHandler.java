@@ -96,6 +96,12 @@ public class ControllerExceptionHandler {
     return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(RequestParamsException.class)
+  protected ResponseEntity<?> RequestParamsException(RequestParamsException e){
+
+    return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(UnAuthorizeException.class)
   protected ResponseEntity<?> UnAuthorizeException(UnAuthorizeException e){
 
