@@ -279,6 +279,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         return batchStockDTO;
+    }
     
     @Override
     public List<ProductResponseDTO> getProducts() {

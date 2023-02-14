@@ -18,8 +18,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "batch")
 public class Batch {
 

@@ -13,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "section")
 public class Section {
     @Id
