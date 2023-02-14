@@ -213,80 +213,57 @@ public class ProductServiceImpl implements IProductService {
                 .filter(batch -> batch.getCurrentQuantity() > 0)
                 .collect(Collectors.toList());
 
-
-
         Integer idSection = batchRepository.findSectionByWarehouseAndProduct(idWarehouse, idProduct);
 
-        //
         SectionDto sectionDto = new SectionDto();
         sectionDto.setSectionCode(idSection);
         sectionDto.setWarehouseCode(idWarehouse);
 
         // BatchStockDTO Data
         BatchStockDTO batchStockDTO = new BatchStockDTO();
-
-
         batchStockDTO.setSection(sectionDto);
         batchStockDTO.setProductId(idProduct);
-
-
 
         List<BatchProductDTO> batchProductDTOList = new ArrayList<>();
 
         for (Batch b: batchList) {
             // BatchProductDTO
             BatchProductDTO batchProductDTO = new BatchProductDTO();
-
             batchProductDTO.setBatch_number(b.getBatchNumber());
             batchProductDTO.setCurrent_quantity(b.getCurrentQuantity());
             batchProductDTO.setDue_date(b.getDueDate());
-
             LocalDate dueDate = b.getDueDate();
             LocalDate currentDate = LocalDate.now();
 
             // Validar fecha de vencimiento
             if (currentDate.isBefore(dueDate.minusWeeks(3))) batchProductDTOList.add(batchProductDTO);
-
         }
 
-        if (batchProductDTOList.isEmpty()) {
-            throw new BatchNotFoundException("Product not avilable");
-        }
+        if (batchProductDTOList.isEmpty()) throw new BatchNotFoundException("Product not avilable");
 
-        // DATA SIN ORDER
+        // Data ordernamiento
         if (order == null){
             batchStockDTO.setBatchStock(batchProductDTOList);
-
-            // CON ORDER
         } else {
             if (order.equals("L")){
-                Comparator<BatchProductDTO> compareByBatch = Comparator
-                        .comparing(BatchProductDTO::getBatch_number);
-
+                Comparator<BatchProductDTO> compareByBatch = Comparator.comparing(BatchProductDTO::getBatch_number);
                 List<BatchProductDTO>  listByBatch = batchProductDTOList.stream().sorted(compareByBatch).collect(Collectors.toList());
                 batchStockDTO.setBatchStock(listByBatch);
 
-
             } else if (order.equals("C")) {
-                Comparator<BatchProductDTO> compareByQuantity = Comparator
-                        .comparing(BatchProductDTO::getCurrent_quantity);
+                Comparator<BatchProductDTO> compareByQuantity = Comparator.comparing(BatchProductDTO::getCurrent_quantity);
                 List<BatchProductDTO>  listByQuantity = batchProductDTOList.stream().sorted(compareByQuantity).collect(Collectors.toList());
                 batchStockDTO.setBatchStock(listByQuantity);
 
             } else if (order.equals("F")) {
-                Comparator<BatchProductDTO> compareByDueDate = Comparator
-                        .comparing(BatchProductDTO::getDue_date);
-
-
+                Comparator<BatchProductDTO> compareByDueDate = Comparator.comparing(BatchProductDTO::getDue_date);
                 List<BatchProductDTO>  listByDueDate = batchProductDTOList.stream().sorted(compareByDueDate).collect(Collectors.toList());
                 batchStockDTO.setBatchStock(listByDueDate);
 
             } else {
                 throw new BatchNotFoundException("Invalid order");
             }
-
         }
-
         return batchStockDTO;
     }
 }
