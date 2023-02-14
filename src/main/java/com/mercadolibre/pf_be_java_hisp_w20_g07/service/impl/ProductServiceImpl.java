@@ -233,19 +233,20 @@ public class ProductServiceImpl implements IProductService {
         }
         User user = userRepository.findById(purchaseOrderRequestDTO.getBuyerId()).get();
 
-        for (int i = 0; i < productsDTOS.size(); i++) {
-            if (productRepository.findCurrentQuantityByProductId(productsDTOS.get(i).getProductId()) < productsDTOS.get(i).getQuantity()) {
-                productsIncorrectQuantity.add(productsDTOS.get(i));
-            }
-        }
-        for (int i = 0; i < productsDTOS.size(); i++) {
-            if (purchaseOrderRequestDTO.getDate().isBefore(productRepository.findDueDateByProduct(productsDTOS.get(i).getProductId()).minusWeeks(3))) {
-            } else {
-                productsDueThreeWeeks.add(productsDTOS.get(i));
+        for (ProductDTO productDTO: productsDTOS) {
+            if (productRepository.findCurrentQuantityByProductId(productDTO.getProductId()) < productDTO.getQuantity()) {
+                productsIncorrectQuantity.add(productDTO);
             }
         }
         if (!productsIncorrectQuantity.isEmpty()) {
-            throw new NotFoundException("These quantities aren't in stock");
+            throw new NotFoundException("These quantities aren't in stock " + productsIncorrectQuantity);
+        }
+        List<Batch> batchWithProducts = batchRepository.findByProductId(purchaseOrderRequestDTO.getProduct().get(0).getProductId());
+        for (Batch batch: batchWithProducts) {
+            if (purchaseOrderRequestDTO.getDate().isBefore(batch.getDueDate().minusWeeks(3))) {
+            } else {
+                productsDueThreeWeeks.add(new ProductDTO(batch.getProduct().getId(),batch.getCurrentQuantity()));
+            }
         }
         if (!productsDueThreeWeeks.isEmpty()) {
             throw new RuntimeException("These date will due soon");

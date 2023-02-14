@@ -41,11 +41,7 @@ public class ProductController {
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
         return new ResponseEntity(productService.update(inboundOrderRequestDto,username), HttpStatus.OK);
     }
-
-    /*
-
     //US_2 buyer
-
 
     @GetMapping("/list")
     public ResponseEntity<List<ProductResponseDTO>> findProductByCategory(@RequestParam(required = false) String code) {
