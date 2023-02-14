@@ -242,10 +242,11 @@ public class ProductServiceImpl implements IProductService {
         if (!productsIncorrectQuantity.isEmpty()) {
             throw new NotFoundException("These quantities aren't in stock " + productsIncorrectQuantity);
         }
-        for (int i = 0; i < productsDTOS.size(); i++) {
-            if (purchaseOrderRequestDTO.getDate().isBefore(productRepository.findDueDateByProduct(productsDTOS.get(i).getProductId()).minusWeeks(3))) {
+        List<Batch> batchWithProducts = batchRepository.findByProductId(purchaseOrderRequestDTO.getProduct().get(0).getProductId());
+        for (Batch batch: batchWithProducts) {
+            if (purchaseOrderRequestDTO.getDate().isBefore(batch.getDueDate().minusWeeks(3))) {
             } else {
-                productsDueThreeWeeks.add(productsDTOS.get(i));
+                productsDueThreeWeeks.add(new ProductDTO(batch.getProduct().getId(),batch.getCurrentQuantity()));
             }
         }
         if (!productsDueThreeWeeks.isEmpty()) {
