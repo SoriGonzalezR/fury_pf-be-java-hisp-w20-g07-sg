@@ -11,8 +11,6 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Calendar;
 import java.util.Date;
 
 @Getter
@@ -20,11 +18,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "batch")
 public class Batch {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer batchNumber;
 
     @Column(name = "initial_quantity")
@@ -37,29 +37,24 @@ public class Batch {
 
     @Column(name = "current_temperature")
     private Double currentTemperature;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "section_id")
     private Section section;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "inbound_order_id")
     private InboundOrder inboundOrder;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    //rework
     @Column(name = "manufacturing_date")
     private LocalDate manufacturingDate;
-
-    //@Temporal(TemporalType.TIME)
     @Column(name = "manufacturing_time")
-    //@Temporal(TemporalType.TIME)
     private LocalDateTime manufacturingTime;
-
     @Column(name = "due_date")
     private LocalDate dueDate;
+
 
 
 }

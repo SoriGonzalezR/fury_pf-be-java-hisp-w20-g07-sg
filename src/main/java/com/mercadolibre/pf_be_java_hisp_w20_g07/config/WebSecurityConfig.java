@@ -25,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           .disable()
           .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+
                 //US1
                 .antMatchers("/api/v1/fresh-products/inboundorder").permitAll()
                 //.hasAnyAuthority("REPRESENTANTE")

@@ -15,6 +15,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,6 +38,20 @@ public class InboundOrderDto {
     private SectionDto section;
 
     private List<BatchDto> batchStock;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InboundOrderDto that = (InboundOrderDto) o;
+        return id == that.id && Objects.equals(date, that.date) && Objects.equals(section, that.section) && Objects.equals(batchStock, that.batchStock);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date, section, batchStock);
+    }
 }
 
 

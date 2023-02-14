@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "section")
 public class Section {
     @Id
@@ -29,12 +31,11 @@ public class Section {
     @ManyToOne()
     @JoinColumn(name = "warehouse_id")
     private WareHouse warehouse;
-
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "section", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "section",fetch = FetchType.EAGER)
     private List<Batch> batches;
 
 }

@@ -7,17 +7,17 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
+@ToString
+@EqualsAndHashCode
 public class BatchDto {
 
 
@@ -50,10 +50,37 @@ public class BatchDto {
     private LocalDate dueDate;
 
 
+
     //private Section section;
     //private InboundOrder inboundOrder;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BatchDto batchDto = (BatchDto) o;
+        return productId == batchDto.productId && Double.compare(batchDto.currentTemperature, currentTemperature) == 0 && Double.compare(batchDto.minimumTemperature, minimumTemperature) == 0 && initialQuantity == batchDto.initialQuantity && currentQuantity == batchDto.currentQuantity && Objects.equals(batchNumber, batchDto.batchNumber) && Objects.equals(manufacturingDate, batchDto.manufacturingDate) && Objects.equals(manufacturingTime, batchDto.manufacturingTime) && Objects.equals(dueDate, batchDto.dueDate);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(batchNumber, productId, currentTemperature, minimumTemperature, initialQuantity, currentQuantity, manufacturingDate, manufacturingTime, dueDate);
+    }
+
+    @Override
+    public String toString() {
+        return "BatchDto{" +
+                "batchNumber=" + batchNumber +
+                ", productId=" + productId +
+                ", currentTemperature=" + currentTemperature +
+                ", minimumTemperature=" + minimumTemperature +
+                ", initialQuantity=" + initialQuantity +
+                ", currentQuantity=" + currentQuantity +
+                ", manufacturingDate=" + manufacturingDate +
+                ", manufacturingTime=" + manufacturingTime +
+                ", dueDate=" + dueDate +
+                '}';
+    }
 
 }

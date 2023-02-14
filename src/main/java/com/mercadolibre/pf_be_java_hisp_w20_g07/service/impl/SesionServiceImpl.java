@@ -3,6 +3,7 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.UserRequestDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.UserResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.User;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UnAuthorizeException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.IUserRepository;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.ISesionService;
@@ -39,7 +40,7 @@ public class SesionServiceImpl implements ISesionService {
         // ToDo: se podria agregar alguna libreria para encriptar la password
         String username = user.getUserName();
         User usuario = userRepository.findUserByUsernameAndPassword(username, user.getPassword())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(UnAuthorizeException::new);
 
 
         List<String> roles = new ArrayList<>();

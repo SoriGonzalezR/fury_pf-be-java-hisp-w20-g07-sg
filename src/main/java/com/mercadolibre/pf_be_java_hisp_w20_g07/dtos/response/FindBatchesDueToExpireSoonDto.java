@@ -11,6 +11,6 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class InboundOrderResponseDto {
+public class FindBatchesDueToExpireSoonDto {
     private List<BatchDto> batchStock;
 }

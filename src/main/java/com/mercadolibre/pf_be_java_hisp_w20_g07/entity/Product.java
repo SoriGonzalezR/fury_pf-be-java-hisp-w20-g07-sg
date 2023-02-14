@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+
 @Getter
 @Setter
 @Entity
@@ -24,10 +25,10 @@ public class Product {
 
     private double price;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     private List<Batch> batches;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch = FetchType.EAGER)
     private List<PurchaseOrderHasProduct> purchaseOrderHasProducts;
 
     @Override
