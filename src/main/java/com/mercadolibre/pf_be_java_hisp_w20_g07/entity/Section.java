@@ -10,9 +10,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Table(name = "section")
 public class Section {
     @Id

@@ -15,9 +15,9 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "batch")
 public class Batch {
 

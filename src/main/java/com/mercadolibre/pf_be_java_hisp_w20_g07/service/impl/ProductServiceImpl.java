@@ -1,6 +1,11 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
-
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchProductDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.BatchNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.*;
@@ -22,24 +27,20 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.List;
 import java.util.Optional;
-
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
-
-    
-
     IWarehouseRepository warehouseRepository;
-
     ISectionRepository sectionRepository;
-
     IInboundOrderRepository iInboundOrderRepository;
-
     IBatchRepository batchRepository;
+
     
     IProductRepository productRepository;
     IUserRepository userRepository;
@@ -206,6 +207,78 @@ public class ProductServiceImpl implements IProductService {
                 }).collect(Collectors.toList()));
 
         return inboundOrderResponseDto;
+    }
+
+    @Override
+    public BatchStockDTO productInStock(Integer idProduct, String order, String username){
+
+        //validar existencia del producto
+        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product with id " + idProduct +" not found"));
+
+        //validacion representante-warehouse valido
+        User user = userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        Integer idWarehouse = user.getWareHouse().getId();
+
+        // Validar que el warehouse es válido y que el representante pertenece al  warehouse
+        List<Batch> batchList =  batchRepository.findBatchByProduct(idProduct)
+                .stream()
+                .filter(batch -> batch.getSection().getWarehouse().getId().equals(idWarehouse))
+                .filter(batch -> batch.getCurrentQuantity() > 0)
+                .collect(Collectors.toList());
+
+        Integer idSection = batchRepository.findSectionByWarehouseAndProduct(idWarehouse, idProduct);
+
+        SectionDto sectionDto = new SectionDto();
+        sectionDto.setSectionCode(idSection);
+        sectionDto.setWarehouseCode(idWarehouse);
+
+        // BatchStockDTO Data
+        BatchStockDTO batchStockDTO = new BatchStockDTO();
+        batchStockDTO.setSection(sectionDto);
+        batchStockDTO.setProductId(idProduct);
+
+        List<BatchProductDTO> batchProductDTOList = new ArrayList<>();
+
+        for (Batch b: batchList) {
+            // BatchProductDTO
+            BatchProductDTO batchProductDTO = new BatchProductDTO();
+            batchProductDTO.setBatch_number(b.getBatchNumber());
+            batchProductDTO.setCurrent_quantity(b.getCurrentQuantity());
+            batchProductDTO.setDue_date(b.getDueDate());
+            LocalDate dueDate = b.getDueDate();
+            LocalDate currentDate = LocalDate.now();
+
+            // Validar fecha de vencimiento
+            if (currentDate.isBefore(dueDate.minusWeeks(3))) batchProductDTOList.add(batchProductDTO);
+        }
+
+        if (batchProductDTOList.isEmpty()) throw new BatchNotFoundException("Product not avilable");
+
+        // Data ordernamiento
+        if (order == null){
+            batchStockDTO.setBatchStock(batchProductDTOList);
+        } else {
+            if (order.equals("L")){
+                Comparator<BatchProductDTO> compareByBatch = Comparator.comparing(BatchProductDTO::getBatch_number);
+                List<BatchProductDTO>  listByBatch = batchProductDTOList.stream().sorted(compareByBatch).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByBatch);
+
+            } else if (order.equals("C")) {
+                Comparator<BatchProductDTO> compareByQuantity = Comparator.comparing(BatchProductDTO::getCurrent_quantity);
+                List<BatchProductDTO>  listByQuantity = batchProductDTOList.stream().sorted(compareByQuantity).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByQuantity);
+
+            } else if (order.equals("F")) {
+                Comparator<BatchProductDTO> compareByDueDate = Comparator.comparing(BatchProductDTO::getDue_date);
+                List<BatchProductDTO>  listByDueDate = batchProductDTOList.stream().sorted(compareByDueDate).collect(Collectors.toList());
+                batchStockDTO.setBatchStock(listByDueDate);
+
+            } else {
+                throw new BatchNotFoundException("Invalid order");
+            }
+        }
+        return batchStockDTO;
     }
     
     @Override

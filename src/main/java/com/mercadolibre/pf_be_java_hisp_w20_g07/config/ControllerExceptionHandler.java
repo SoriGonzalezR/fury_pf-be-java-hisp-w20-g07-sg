@@ -3,8 +3,6 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.config;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.MessageDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.*;
-
-
 import com.newrelic.api.agent.NewRelic;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -96,6 +94,11 @@ public class ControllerExceptionHandler {
     return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(BatchNotFoundException.class)
+  protected ResponseEntity<?> batchNotFoundException(BatchNotFoundException e){
+    return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler(RequestParamsException.class)
   protected ResponseEntity<?> RequestParamsException(RequestParamsException e){
 
@@ -107,7 +110,6 @@ public class ControllerExceptionHandler {
 
     return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.UNAUTHORIZED);
   }
-
-
-
 }
+
+
