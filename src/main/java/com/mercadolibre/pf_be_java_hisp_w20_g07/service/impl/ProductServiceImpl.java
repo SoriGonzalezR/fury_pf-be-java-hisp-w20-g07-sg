@@ -3,7 +3,8 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.*;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.RequestParamsException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
@@ -12,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.ProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductOrderResponseDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductResponseDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.NotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
@@ -22,6 +20,7 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -342,7 +341,44 @@ public class ProductServiceImpl implements IProductService {
         return "update";
     }
 
+    @Override
+    public FindBatchesDueToExpireSoonDto findBatchesDueToExpireSoon(int days, String userName) {
 
+        int idWarehouse = userRepository.findUserByUsername(userName).orElseThrow(() -> new UserNotFoundException()).getWareHouse().getId();
+
+        LocalDate startDate = LocalDate.parse("2023-02-14");
+        LocalDate endDate = startDate.plusDays(days);
+
+        List<Batch> batches = batchRepository.findBatches(idWarehouse,startDate,endDate);
+
+        FindBatchesDueToExpireSoonDto result = new FindBatchesDueToExpireSoonDto();
+        result.setBatchStock(batches.stream().map( e -> modelMapper.map(e,BatchDto.class)).collect(Collectors.toList()));
+        return result;
+    }
+
+    @Override
+    public FindBatchesDueToExpireSoonDto findBatchesDueToExpireSoon(int days, String order, String category, String userName) {
+
+        if((!category.equals("FS") && !category.equals("RF") && !category.equals("FF")) || (!order.equals("date_asc") && !order.equals("date_desc"))){
+            throw new RequestParamsException();
+        }
+        int idWarehouse = userRepository.findUserByUsername(userName).orElseThrow(() -> new UserNotFoundException()).getWareHouse().getId();
+
+        LocalDate startDate = LocalDate.parse("2023-02-14");
+
+        LocalDate endDate = startDate.plusDays(days);
+        List<Batch> batches;
+        if( order.equals("date_asc")) {
+            batches = batchRepository.findBatchesAsc(idWarehouse,startDate,endDate,category);
+        } else {
+            batches = batchRepository.findBatchesDesc(idWarehouse,startDate,endDate,category);
+        }
+
+        FindBatchesDueToExpireSoonDto result = new FindBatchesDueToExpireSoonDto();
+        result.setBatchStock(batches.stream().map( e -> modelMapper.map(e,BatchDto.class)).collect(Collectors.toList()));
+
+        return result;
+    }
 }
 
 
