@@ -14,8 +14,6 @@ import java.util.List;
 @Table(name = "usuarios")
 public class User {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,10 +30,5 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<PurchaseOrder> purchaseOrders;
-
-
-
-
-
 
 }
