@@ -70,7 +70,7 @@ public class ProductServiceImpl implements IProductService {
         batch.setInboundOrder(inboundOrder);
 
         //validar existenia del producto
-        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + batchDto.getProductId() +" not found"));
+        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + batchDto.getProductId() +" not found"));
         batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
 
         return batch;
@@ -91,7 +91,7 @@ public class ProductServiceImpl implements IProductService {
             throw new ResourceNotFoundException("the user does not belong to the warehouse");
         }
 
-        //validacion de quela seccion sea valida
+        //validacion de que la seccion sea valida
         Section section = sectionRepository.findSectionByIdAndWarehouse(inboundOrderRequestDto.getInboundOrder().getSection().getSectionCode(),wareHouse)
                 .orElseThrow(() -> new ResourceNotFoundException("the section does not belong to the warehouse"));
 
