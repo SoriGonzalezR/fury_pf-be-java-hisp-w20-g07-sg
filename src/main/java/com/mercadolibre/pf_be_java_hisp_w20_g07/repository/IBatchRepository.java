@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface IBatchRepository extends JpaRepository<Batch,Integer> {
 
-    @Query(value = "select * from batch where product_id = idProduct ", nativeQuery = true)
-    List<Batch> findBachByProduct(@Param("idProduct") String idProduct);
+    @Query(value = "select * from batch where product_id = :idProduct", nativeQuery = true)
+    List<Batch> findBatchByProduct(@Param("idProduct") Integer idProduct);
 }

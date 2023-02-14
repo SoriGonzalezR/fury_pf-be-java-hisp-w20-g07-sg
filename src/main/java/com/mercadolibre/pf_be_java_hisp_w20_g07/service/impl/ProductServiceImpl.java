@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
@@ -203,16 +204,36 @@ public class ProductServiceImpl implements IProductService {
 
         Integer idWarehouse = user.getWareHouse().getId();
 
-        warehouseService.findById(idWarehouse);
+        // Validar que  que el warehouse es válido y que el representante pertenece al  warehouse
+        List<Batch> batchList =  batchRepository.findBatchByProduct(idProduct)
+                .stream()
+                .filter(batch -> batch.getSection().getWarehouse().getId().equals(idWarehouse))
+                .collect(Collectors.toList());
 
 
+
+        //listBatch.forEach(batch -> System.out.println(batch.getBatchNumber()));
+
+        SectionDto sectionDto = new SectionDto();
+
+        //sectionDto.setSectionCode();
+        sectionDto.setWarehouseCode(idWarehouse);
+
+        BatchStockDTO batchStockDTO = new BatchStockDTO();
+
+        batchStockDTO.setIdProduct(idProduct);
+        batchStockDTO.setSection(sectionDto );
+
+
+
+        batchStockDTO.setBatchStockProduct();
 
         //validar existenia del producto
         Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
 
         product.getBatches().stream().map(batch -> batch.getSection().getBatches().size());
 
-
+        //batchRepository.findBatchByProduct(idProduct).stream().forEach(batch -> System.out.println(batch));
 
 
 
