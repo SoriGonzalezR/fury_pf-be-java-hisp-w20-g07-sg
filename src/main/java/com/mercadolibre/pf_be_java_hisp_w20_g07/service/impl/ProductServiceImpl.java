@@ -7,6 +7,7 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.BatchNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
@@ -16,7 +17,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -192,7 +196,7 @@ public class ProductServiceImpl implements IProductService {
     public BatchStockDTO productInStock(Integer idProduct, String username){
 
         //validar existenia del producto
-        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
+        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product with id " + idProduct +" not found"));
 
         //validacion representante-warehouse valido
         User user = userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -203,15 +207,16 @@ public class ProductServiceImpl implements IProductService {
         List<Batch> batchList =  batchRepository.findBatchByProduct(idProduct)
                 .stream()
                 .filter(batch -> batch.getSection().getWarehouse().getId().equals(idWarehouse))
+                .filter(batch -> batch.getCurrentQuantity() > 0)
                 .collect(Collectors.toList());
 
 
 
+        Integer idSection = batchRepository.findSectionByWarehouseAndProduct(idWarehouse, idProduct);
 
-
+        //
         SectionDto sectionDto = new SectionDto();
-
-        //sectionDto.setSectionCode(seccionCode);
+        sectionDto.setSectionCode(idSection);
         sectionDto.setWarehouseCode(idWarehouse);
 
         // BatchStockDTO Data
@@ -221,31 +226,34 @@ public class ProductServiceImpl implements IProductService {
         batchStockDTO.setSection(sectionDto);
         batchStockDTO.setProductId(idProduct);
 
-        List<BatchProductDTO> batchProductDTOList = batchList.stream().map(batch -> modelMapper.map(batch, BatchProductDTO.class)).collect(Collectors.toList());
 
+
+        List<BatchProductDTO> batchProductDTOList = new ArrayList<>();
+
+        for (Batch b: batchList) {
+            // BatchProductDTO
+            BatchProductDTO batchProductDTO = new BatchProductDTO();
+
+            batchProductDTO.setBatch_number(b.getBatchNumber());
+            batchProductDTO.setCurrent_quantity(b.getCurrentQuantity());
+            batchProductDTO.setDue_date(b.getDueDate());
+
+            LocalDate dueDate = b.getDueDate();
+            LocalDate currentDate = LocalDate.now();
+
+            // Validar fecha de vencimiento
+            if (currentDate.isBefore(dueDate.minusWeeks(3))) batchProductDTOList.add(batchProductDTO);
+
+        }
+
+        if (batchProductDTOList.isEmpty()) {
+            throw new BatchNotFoundException("Product not avilable");
+        }
+
+        // DATA SIN ORDER
         batchStockDTO.setBatchStock(batchProductDTOList);
 
-        // DTO Response
-        //BatchStockResponseDTO batchStockResponseDTO = new BatchStockResponseDTO();
-        //batchStockResponseDTO.setBatchStockDTO(batchStockDTO);
-
-
-
-
-
-
-
-        //batchStockDTO.setBatchStockProduct();
-
-
-
-       // product.getBatches().stream().map(batch -> batch.getSection().getBatches().size());
-
-        //batchRepository.findBatchByProduct(idProduct).stream().forEach(batch -> System.out.println(batch));
-
-
-
-        //valdiar que un batch exista
+        // CON ORDER
 
 
         return batchStockDTO;
