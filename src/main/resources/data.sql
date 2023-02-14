@@ -45,10 +45,10 @@ VALUES (1, 50, 50, 11.0, 1, 1, 1,'2023-02-10', '0001-01-10 12:30:00','2023-02-20
        (3, 50, 50, -5, 3, 2, 3,'2023-02-10','0001-01-10 12:30:00','2023-02-20');
        --(4, 50, 50, 11.0, 4, 2, 1,'2023-02-10','0000-00-10 12:30:00', '2023-02-20');
 
-INSERT INTO purchase_order (id, date, order_status_id, user_id)
-VALUES (1, now(), 1, 2),(2, now(), 1, 2);
+INSERT INTO purchase_order ( date, order_status_id, user_id)
+VALUES (now(), 1, 2),( now(), 1, 2);
 
-INSERT INTO purchase_order_has_product (id, quantity, product_id, purchase_order_id)
-VALUES (1, 2, 1, 1),
-       (2, 3, 2, 1),
-       (3, 2, 2, 2);
+INSERT INTO purchase_order_has_product (quantity, product_id, purchase_order_id)
+VALUES ( 2, 1, 1),
+       ( 3, 2, 1),
+       ( 2, 2, 2);
