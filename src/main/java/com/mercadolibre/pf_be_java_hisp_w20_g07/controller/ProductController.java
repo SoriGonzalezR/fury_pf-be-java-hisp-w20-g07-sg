@@ -2,6 +2,7 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -80,20 +82,8 @@ public class ProductController {
         String info = "info imortante get /api/v1/fresh-products/{idProduct}/warehouse/list";
         return new ResponseEntity(info, HttpStatus.OK);
     }
-
+*/
     //US 5 Representante
-
-
-
-    @GetMapping("/batch/list/due-date/{cantDays}")
-    public ResponseEntity<String> r5__1_2(
-            @PathVariable int cantDayes,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String order
-            ) {
-        String info = "info imortante get /api/v1/fresh-products/batch/list/due-date/{cantDays}?category = {FS, RF, FF}&order = {date_asc, date_desc}}";
-        return new ResponseEntity(info, HttpStatus.OK);
-    }*/
 
     @GetMapping("/batch/list/due-date/{cantDays}")
     public ResponseEntity<FindBatchesDueToExpireSoonDto> r5__1_1(
@@ -103,21 +93,12 @@ public class ProductController {
             @RequestParam(required = false) String order
             ){
 
-
-
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
 
         if(category == null && order == null) {
-
             return new ResponseEntity(productService.findBatchesDueToExpireSoon(cantDays, username), HttpStatus.OK);
         } else {
-
             return new ResponseEntity(productService.findBatchesDueToExpireSoon(cantDays, order,category,username), HttpStatus.OK);
-
         }
-
-
     }
-
-
 }

@@ -51,8 +51,6 @@ public class IntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
-
-
   @Autowired
   SesionServiceImpl service;
 
@@ -64,8 +62,6 @@ public class IntegrationTest {
     RequestMockHolder.clear();
   }
 
-  @Autowired
-  SesionServiceImpl service;
   private ObjectWriter writer;
 
   @BeforeEach
@@ -148,7 +144,6 @@ public class IntegrationTest {
 
     mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3))
             .andDo(print()).andExpect(status().isForbidden());
-
   }
 
   @Test
@@ -190,6 +185,22 @@ public class IntegrationTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[0].batch_number").value(8))
             .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[1].batch_number").value(7))
             .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[2].batch_number").value(9));
+  }
+
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon invalid Params")
+  void finBatchesDueToExpireSoonInvalidParams() throws Exception {
+
+    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
+
+    String token = service.login(userRequestDTO).getToken();
+
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                    .param("order","date_asc")
+                    .param("category","SF")
+                    .header("Authorization",token)
+            )
+            .andDo(print()).andExpect(status().isBadRequest());
   }
 
   @Test
@@ -245,22 +256,6 @@ public class IntegrationTest {
   }
 
   @Test
-  @DisplayName("finBatchesDueToExpireSoon invalid Params")
-  void finBatchesDueToExpireSoonInvalidParams() throws Exception {
-
-    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
-
-    String token = service.login(userRequestDTO).getToken();
-
-    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
-                    .param("order","date_asc")
-                    .param("category","SF")
-                    .header("Authorization",token)
-            )
-            .andDo(print()).andExpect(status().isBadRequest());
-  }
-  
-  @Test
   @DisplayName("Save Order")
   void saveOrderTest() throws Exception{
     UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
@@ -299,6 +294,5 @@ public class IntegrationTest {
             .andDo(print()).andExpect(status().isOk())
             .andExpect(content().contentType("text/plain;charset=UTF-8"))
             .andExpect(MockMvcResultMatchers.jsonPath("$").value("update"));
-
   }
 }
