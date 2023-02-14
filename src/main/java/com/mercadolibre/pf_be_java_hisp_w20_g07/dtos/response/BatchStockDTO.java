@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class BatchStockDTO {
     private SectionDto section;
-    private Integer idProduct;
-    private List<BatchProductDTO> batchStockProduct;
+    private Integer productId;
+    private List<BatchProductDTO> batchStock;
 }

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -73,7 +72,7 @@ public class ProductController {
     //US_3 Representante
 
     @GetMapping("/{idProduct}/batch/list")
-    public ResponseEntity<BatchStockDTO> r3_1(@PathVariable Integer idProduct,  @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<BatchStockDTO> r3_1(@PathVariable Integer idProduct, @RequestHeader Map<String, String> headers) {
         //String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
         return new ResponseEntity(productService.productInStock(idProduct, username), HttpStatus.OK);

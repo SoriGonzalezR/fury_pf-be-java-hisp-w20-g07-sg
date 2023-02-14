@@ -1,13 +1,9 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.BatchDto;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
@@ -20,10 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -199,12 +191,15 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public BatchStockDTO productInStock(Integer idProduct, String username){
 
+        //validar existenia del producto
+        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
+
         //validacion representante-warehouse valido
-        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
 
         Integer idWarehouse = user.getWareHouse().getId();
 
-        // Validar que  que el warehouse es válido y que el representante pertenece al  warehouse
+        // Validar que el warehouse es válido y que el representante pertenece al  warehouse
         List<Batch> batchList =  batchRepository.findBatchByProduct(idProduct)
                 .stream()
                 .filter(batch -> batch.getSection().getWarehouse().getId().equals(idWarehouse))
@@ -212,26 +207,39 @@ public class ProductServiceImpl implements IProductService {
 
 
 
-        //listBatch.forEach(batch -> System.out.println(batch.getBatchNumber()));
+
 
         SectionDto sectionDto = new SectionDto();
 
-        //sectionDto.setSectionCode();
+        //sectionDto.setSectionCode(seccionCode);
         sectionDto.setWarehouseCode(idWarehouse);
 
+        // BatchStockDTO Data
         BatchStockDTO batchStockDTO = new BatchStockDTO();
 
-        batchStockDTO.setIdProduct(idProduct);
-        batchStockDTO.setSection(sectionDto );
+
+        batchStockDTO.setSection(sectionDto);
+        batchStockDTO.setProductId(idProduct);
+
+        List<BatchProductDTO> batchProductDTOList = batchList.stream().map(batch -> modelMapper.map(batch, BatchProductDTO.class)).collect(Collectors.toList());
+
+        batchStockDTO.setBatchStock(batchProductDTOList);
+
+        // DTO Response
+        //BatchStockResponseDTO batchStockResponseDTO = new BatchStockResponseDTO();
+        //batchStockResponseDTO.setBatchStockDTO(batchStockDTO);
 
 
 
-        batchStockDTO.setBatchStockProduct();
 
-        //validar existenia del producto
-        Product product = productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotFoundException("Product wirth id " + idProduct +" not found"));
 
-        product.getBatches().stream().map(batch -> batch.getSection().getBatches().size());
+
+
+        //batchStockDTO.setBatchStockProduct();
+
+
+
+       // product.getBatches().stream().map(batch -> batch.getSection().getBatches().size());
 
         //batchRepository.findBatchByProduct(idProduct).stream().forEach(batch -> System.out.println(batch));
 
@@ -240,6 +248,6 @@ public class ProductServiceImpl implements IProductService {
         //valdiar que un batch exista
 
 
-        return null;
+        return batchStockDTO;
     }
 }
