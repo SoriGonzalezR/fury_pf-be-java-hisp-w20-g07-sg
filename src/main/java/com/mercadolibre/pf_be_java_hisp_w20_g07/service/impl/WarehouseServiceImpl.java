@@ -39,6 +39,7 @@ public class WarehouseServiceImpl implements IWarehouseService {
     @Override
     @Transactional
 
+    //Requisito 4
     public StockResponseDto getStockbyProduct(Integer productId) {
         productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId +" not found"));
 

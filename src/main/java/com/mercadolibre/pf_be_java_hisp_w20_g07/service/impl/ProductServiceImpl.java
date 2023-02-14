@@ -30,9 +30,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements IProductService {
 
-
-    
-
     IWarehouseRepository warehouseRepository;
 
     ISectionRepository sectionRepository;
@@ -61,21 +58,7 @@ public class ProductServiceImpl implements IProductService {
         this.orderStatusRepository = orderStatusRepository;
     }
 
-
-    
-    private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
-
-        batch.setSection(section);
-        batch.setInboundOrder(inboundOrder);
-
-        //validar existenia del producto
-        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + batchDto.getProductId() +" not found"));
-        batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
-
-        return batch;
-    }
-
-
+    //Requisito 1
     @Override
     public InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto,String username) {
 
@@ -124,8 +107,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-
-         inboundOrder = iInboundOrderRepository.save(inboundOrder);
+        inboundOrder = iInboundOrderRepository.save(inboundOrder);
 
         InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
 
@@ -165,12 +147,6 @@ public class ProductServiceImpl implements IProductService {
             }
         });
 
-        //validar que la seccion tenga espacio
-        if((section.getBatches().size() + inboundOrderRequestDto.getInboundOrder().getBatchStock().size() > section.getMaximumBatchQuantity())){
-            throw new ResourceNotFoundException("there isn't space for all new batches");
-        }
-
-
         InboundOrder inboundOrder = modelMapper.map(inboundOrderRequestDto.getInboundOrder(),InboundOrder.class);
 
         //mapeo de batchesDTO a batches
@@ -207,7 +183,20 @@ public class ProductServiceImpl implements IProductService {
 
         return inboundOrderResponseDto;
     }
-    
+
+    private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
+
+        batch.setSection(section);
+        batch.setInboundOrder(inboundOrder);
+
+        //validar existenia del producto
+        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + batchDto.getProductId() +" not found"));
+        batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
+
+        return batch;
+    }
+
+    //Requisito 2
     @Override
     public List<ProductResponseDTO> getProducts() {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductResponseDTO.class)).collect(Collectors.toList());
@@ -277,11 +266,6 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Double calculateTotalPrice() {
-        return null;
-    }
-
-    @Override
     public List<ProductOrderResponseDTO> getOrder(int orderId) {
         System.out.println(productRepository.findProductByOrderId(orderId));
         return productRepository.findProductByOrderId(orderId).stream().map(product -> modelMapper.map(product, ProductOrderResponseDTO.class)).collect(Collectors.toList());
@@ -341,6 +325,7 @@ public class ProductServiceImpl implements IProductService {
         return "update";
     }
 
+    //Requisito 5
     @Override
     public FindBatchesDueToExpireSoonDto findBatchesDueToExpireSoon(int days, String userName) {
 

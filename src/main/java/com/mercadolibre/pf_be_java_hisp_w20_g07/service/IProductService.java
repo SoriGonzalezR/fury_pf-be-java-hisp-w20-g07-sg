@@ -18,8 +18,6 @@ public interface IProductService {
 
     PurchaseOrderResponseDTO createPurchaseOrder(PurchaseOrderRequestDTO purchaseOrderRequestDTO);
 
-    Double calculateTotalPrice();
-
     List<ProductOrderResponseDTO> getOrder(int orderId);
 
     String updateOrder(int orderId, PurchaseOrderRequestDTO purchaseOrderRequestDTO);

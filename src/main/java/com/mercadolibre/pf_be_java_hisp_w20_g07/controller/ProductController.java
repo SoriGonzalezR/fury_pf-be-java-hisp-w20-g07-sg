@@ -51,7 +51,6 @@ public class ProductController {
     }
 
     //US_2 buyer
-
     @GetMapping("/list")
     public ResponseEntity<List<ProductResponseDTO>> findProductByCategory(@RequestParam(required = false) String code) {
         if (code == null) {
@@ -74,7 +73,6 @@ public class ProductController {
     public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
         return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
-
     
 /*
     //US_3 Representante

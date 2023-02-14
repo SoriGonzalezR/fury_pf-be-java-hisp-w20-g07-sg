@@ -27,8 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 //US1
-                .antMatchers("/api/v1/fresh-products/inboundorder").permitAll()
-                //.hasAnyAuthority("REPRESENTANTE")
+                .antMatchers("/api/v1/fresh-products/inboundorder")
+                .hasAnyAuthority("REPRESENTANTE")
                 //US2
                 .antMatchers("/api/v1/fresh-products/list","/api/v1/fresh-products/orders","/api/v1/fresh-products/orders/{idOrder}")
                 .hasAnyAuthority("BUYER","REPRESENTANTE")
