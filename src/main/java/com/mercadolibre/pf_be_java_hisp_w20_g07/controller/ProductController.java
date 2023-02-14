@@ -4,22 +4,18 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.StockResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IWarehouseService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
-
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductOrderResponseDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ProductResponseDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.PurchaseOrderResponseDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -79,12 +75,7 @@ public class ProductController {
         return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
 
-    //US 4 Representante
-    @GetMapping("/{idProduct}/warehouse/list")
-    public ResponseEntity<StockResponseDto> r4__1(@PathVariable int idProduct) {
-        //String info = "info importante get /api/v1/fresh-products/{idProduct}/warehouse/list";
-        return new ResponseEntity(warehouseService.getStockbyProduct(idProduct), HttpStatus.OK);
-    }
+    
 /*
     //US_3 Representante
 
@@ -93,18 +84,31 @@ public class ProductController {
         String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
         return new ResponseEntity(info, HttpStatus.OK);
     }
+*/
+
+    //US 4 Representante
+    @GetMapping("/{idProduct}/warehouse/list")
+    public ResponseEntity<StockResponseDto> r4__1(@PathVariable int idProduct) {
+        //String info = "info importante get /api/v1/fresh-products/{idProduct}/warehouse/list";
+        return new ResponseEntity(warehouseService.getStockbyProduct(idProduct), HttpStatus.OK);
+    }
 
     //US 5 Representante
 
     @GetMapping("/batch/list/due-date/{cantDays}")
-    public ResponseEntity<String> r5__1_2(
-            @PathVariable int cantDayes,
+    public ResponseEntity<FindBatchesDueToExpireSoonDto> r5__1_1(
+            @PathVariable Integer cantDays,
+            @RequestHeader Map<String, String> headers,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String order
-            ) {
-        String info = "info imortante get /api/v1/fresh-products/batch/list/due-date/{cantDays}?category = {FS, RF, FF}&order = {date_asc, date_desc}}";
-        return new ResponseEntity(info, HttpStatus.OK);
-    }*/
+            ){
 
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
 
+        if(category == null && order == null) {
+            return new ResponseEntity(productService.findBatchesDueToExpireSoon(cantDays, username), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(productService.findBatchesDueToExpireSoon(cantDays, order,category,username), HttpStatus.OK);
+        }
+    }
 }

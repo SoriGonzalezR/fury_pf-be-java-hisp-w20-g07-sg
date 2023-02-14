@@ -1,5 +1,6 @@
 package com.mercadolibre.pf_be_java_hisp_w20_g07.integration;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -27,14 +28,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -49,6 +51,9 @@ public class IntegrationTest {
   @Autowired
   MockMvc mockMvc;
 
+  @Autowired
+  SesionServiceImpl service;
+
   protected IntegrationTest() {;
   }
 
@@ -57,8 +62,6 @@ public class IntegrationTest {
     RequestMockHolder.clear();
   }
 
-  @Autowired
-  SesionServiceImpl service;
   private ObjectWriter writer;
 
   @BeforeEach
@@ -117,7 +120,88 @@ public class IntegrationTest {
 
   }
 
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon Ok")
+  void finBatchesDueToExpireSoon() throws Exception {
 
+    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
+
+    String token = service.login(userRequestDTO).getToken();
+
+     mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                     .header("Authorization",token)
+             )
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[0].batch_number").value(7))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[1].batch_number").value(8))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[2].batch_number").value(9));
+  }
+
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon UnAuthorized")
+  void finBatchesDueToExpireSoonUnAuthorized() throws Exception {
+
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3))
+            .andDo(print()).andExpect(status().isForbidden());
+  }
+
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon order desc ok")
+  void finBatchesDueToExpireSoonDesc() throws Exception {
+
+    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
+
+    String token = service.login(userRequestDTO).getToken();
+
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                    .param("order","date_desc")
+                    .param("category","FS")
+                    .header("Authorization",token)
+            )
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[0].batch_number").value(9))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[1].batch_number").value(7))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[2].batch_number").value(8));
+
+  }
+  
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon order asc ok")
+  void finBatchesDueToExpireSoonAsc() throws Exception {
+
+    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
+
+    String token = service.login(userRequestDTO).getToken();
+
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                    .param("order","date_asc")
+                    .param("category","FS")
+                    .header("Authorization",token)
+            )
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[0].batch_number").value(8))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[1].batch_number").value(7))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[2].batch_number").value(9));
+  }
+
+  @Test
+  @DisplayName("finBatchesDueToExpireSoon invalid Params")
+  void finBatchesDueToExpireSoonInvalidParams() throws Exception {
+
+    UserRequestDTO userRequestDTO = new UserRequestDTO("Tomas","tomas123");
+
+    String token = service.login(userRequestDTO).getToken();
+
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                    .param("order","date_asc")
+                    .param("category","SF")
+                    .header("Authorization",token)
+            )
+            .andDo(print()).andExpect(status().isBadRequest());
+  }
 
   @Test
   void testGetListAllProducts() throws Exception{
@@ -169,7 +253,6 @@ public class IntegrationTest {
             .andDo(print()).andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FRESA"));
-
   }
 
   @Test
@@ -211,9 +294,5 @@ public class IntegrationTest {
             .andDo(print()).andExpect(status().isOk())
             .andExpect(content().contentType("text/plain;charset=UTF-8"))
             .andExpect(MockMvcResultMatchers.jsonPath("$").value("update"));
-
   }
-
-
-
 }
