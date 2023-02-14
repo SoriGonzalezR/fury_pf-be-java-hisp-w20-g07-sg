@@ -3,7 +3,9 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.StockResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IWarehouseService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.SesionServiceImpl;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
@@ -25,10 +27,13 @@ import java.util.List;
 public class ProductController {
 
     IProductService productService;
+    IWarehouseService warehouseService;
 
-    public ProductController(IProductService productService) {
+    public ProductController(IProductService productService, IWarehouseService warehouseService) {
         this.productService = productService;
+        this.warehouseService = warehouseService;
     }
+
 
     //US_1 Representante
     @PostMapping("/inboundorder")
@@ -48,6 +53,7 @@ public class ProductController {
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
         return new ResponseEntity(productService.update(inboundOrderRequestDto,username), HttpStatus.OK);
     }
+
     //US_2 buyer
 
     @GetMapping("/list")
@@ -72,6 +78,13 @@ public class ProductController {
     public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
         return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
+
+    //US 4 Representante
+    @GetMapping("/{idProduct}/warehouse/list")
+    public ResponseEntity<StockResponseDto> r4__1(@PathVariable int idProduct) {
+        //String info = "info importante get /api/v1/fresh-products/{idProduct}/warehouse/list";
+        return new ResponseEntity(warehouseService.getStockbyProduct(idProduct), HttpStatus.OK);
+    }
 /*
     //US_3 Representante
 
@@ -81,16 +94,7 @@ public class ProductController {
         return new ResponseEntity(info, HttpStatus.OK);
     }
 
-    //US 4 Representante
-    @GetMapping("/{idProduct}/warehouse/list")
-    public ResponseEntity<String> r4__1() {
-        String info = "info imortante get /api/v1/fresh-products/{idProduct}/warehouse/list";
-        return new ResponseEntity(info, HttpStatus.OK);
-    }
-
     //US 5 Representante
-
-
 
     @GetMapping("/batch/list/due-date/{cantDays}")
     public ResponseEntity<String> r5__1_2(
