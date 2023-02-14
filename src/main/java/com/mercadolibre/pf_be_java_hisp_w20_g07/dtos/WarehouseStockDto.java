@@ -12,4 +12,5 @@ import lombok.Setter;
 public class WarehouseStockDto {
     private int warehouseCode;
     private int totalQuantity;
+
 }
