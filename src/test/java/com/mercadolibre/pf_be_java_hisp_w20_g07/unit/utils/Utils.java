@@ -35,6 +35,11 @@ public class Utils {
 
         wareHouses.add(wareHousemock);
 
+        usermock = new User(2,"Tomas1","tomas1234",new Role("REPRESENTANTE"),null,null);
+        wareHousemock = new WareHouse(2,"warehouse2","Colombia","Bogota","cll 185 #10-3",usermock,sections);
+
+        wareHouses.add(wareHousemock);
+
         return wareHouses;
 
     }
@@ -45,6 +50,8 @@ public class Utils {
         List<User> users = new ArrayList<>();
         User usermock = new User(1,"Tomas","tomas123",new Role("REPRESENTANTE"),wareHouses().get(0),null);
         users.add(usermock);
+        User usermock2 = new User(2,"Manuel","manuel123",new Role("REPRESENTANTE"),wareHouses().get(1),null);
+        users.add(usermock2);
         System.out.println(usermock.getWareHouse().getId());
         return  users;
     }

@@ -13,14 +13,9 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.RequestParamsExceptio
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.ProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.NotFoundException;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
