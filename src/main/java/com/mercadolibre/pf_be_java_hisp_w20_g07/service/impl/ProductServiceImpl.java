@@ -13,14 +13,9 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.RequestParamsExceptio
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.ProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.NotFoundException;
-import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,21 +56,7 @@ public class ProductServiceImpl implements IProductService {
         this.orderStatusRepository = orderStatusRepository;
     }
 
-
-    
-    private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
-
-        batch.setSection(section);
-        batch.setInboundOrder(inboundOrder);
-
-        //validar existenia del producto
-        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + batchDto.getProductId() +" not found"));
-        batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
-
-        return batch;
-    }
-
-
+    //Requisito 1
     @Override
     public InboundOrderResponseDto save(InboundOrderRequestDto inboundOrderRequestDto,String username) {
 
@@ -125,8 +105,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-
-         inboundOrder = iInboundOrderRepository.save(inboundOrder);
+        inboundOrder = iInboundOrderRepository.save(inboundOrder);
 
         InboundOrderResponseDto inboundOrderResponseDto = new InboundOrderResponseDto();
 
@@ -166,12 +145,6 @@ public class ProductServiceImpl implements IProductService {
             }
         });
 
-        //validar que la seccion tenga espacio
-        if((section.getBatches().size() + inboundOrderRequestDto.getInboundOrder().getBatchStock().size() > section.getMaximumBatchQuantity())){
-            throw new ResourceNotFoundException("there isn't space for all new batches");
-        }
-
-
         InboundOrder inboundOrder = modelMapper.map(inboundOrderRequestDto.getInboundOrder(),InboundOrder.class);
 
         //mapeo de batchesDTO a batches
@@ -208,6 +181,21 @@ public class ProductServiceImpl implements IProductService {
 
         return inboundOrderResponseDto;
     }
+
+
+    public Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
+
+        batch.setSection(section);
+        batch.setInboundOrder(inboundOrder);
+
+        //validar existenia del producto
+        productRepository.findById(batchDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + batchDto.getProductId() +" not found"));
+        batch.setProduct(productRepository.findById(batchDto.getProductId()).get());
+
+        return batch;
+    }
+
+    //Requisito 2
 
     @Override
     public BatchStockDTO productInStock(Integer idProduct, String order, String username){
@@ -281,6 +269,7 @@ public class ProductServiceImpl implements IProductService {
         return batchStockDTO;
     }
     
+
     @Override
     public List<ProductResponseDTO> getProducts() {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductResponseDTO.class)).collect(Collectors.toList());
@@ -322,7 +311,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         if (!productsDueThreeWeeks.isEmpty()) {
-            throw new RuntimeException("These date will due soon");
+            throw new ResourceNotFoundException("These date will due soon");
         }
         OrderStatus orderStatus = orderStatusRepository.findByStatus(purchaseOrderRequestDTO.getOrderStatus().getStatusCode());
         PurchaseOrder purchaseOrder = new PurchaseOrder();
@@ -347,11 +336,6 @@ public class ProductServiceImpl implements IProductService {
         }
         purchaseOrderHasProductRepository.saveAll(purchaseOrderHasProductList);
         return new PurchaseOrderResponseDTO(sumTotal);
-    }
-
-    @Override
-    public Double calculateTotalPrice() {
-        return null;
     }
 
     @Override
@@ -414,6 +398,7 @@ public class ProductServiceImpl implements IProductService {
         return "update";
     }
 
+    //Requisito 5
     @Override
     public FindBatchesDueToExpireSoonDto findBatchesDueToExpireSoon(int days, String userName) {
 

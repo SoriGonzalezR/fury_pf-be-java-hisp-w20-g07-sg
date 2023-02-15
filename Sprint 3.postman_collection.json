@@ -1,0 +1,386 @@
+{
+	"info": {
+		"_postman_id": "b9b268a5-649f-4987-b335-928662e15eca",
+		"name": "Sprint 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25045481"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_name\": \"Tomas\",\n    \"password\": \"tomas123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/log-in",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"log-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 1 - Save",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNjc5MCwiZXhwIjoxNjc2NDE4NTkwfQ.wD52NtI2MNlTmN1i8FLvA7orrzXTspp3RW481CjLNYC6k8Wjp9kLTuDLDKGZH234UmEYNC5twffO3PWhq2UxuQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"inbound_order\": {\n        \"order_number\": 12,\n        \"order_date\": \"12-10-2023\",\n        \"section\": {\n            \"section_code\": 1,\n            \"warehouse_code\": 1\n        },\n        \"batch_stock\": [\n            {\n                \"batch_number\": 100,\n                \"product_id\": 1,\n                \"current_temperature\": 50,\n                \"minimum_temperature\": 10,\n                \"initial_quantity\": 24,\n                \"current_quantity\": 24,\n                \"manufacturing_date\": \"10-10-2023\",\n                \"manufacturing_time\": \"01-01-0001 12:30:00\",\n                \"due_date\": \"20-10-2023\"\n            },\n            {\n                \"batch_number\": 200,\n                \"product_id\": 2,\n                \"current_temperature\": 10.0,\n                \"minimum_temperature\": 12,\n                \"initial_quantity\": 300,\n                \"current_quantity\": 300,\n                \"manufacturing_date\": \"10-01-2023\",\n                \"manufacturing_time\": \"01-01-0001 12:30:00\",\n                \"due_date\": \"10-01-2030\"\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/fresh-products/inboundorder",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"inboundorder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 1 - Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNjc5MCwiZXhwIjoxNjc2NDE4NTkwfQ.wD52NtI2MNlTmN1i8FLvA7orrzXTspp3RW481CjLNYC6k8Wjp9kLTuDLDKGZH234UmEYNC5twffO3PWhq2UxuQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"inbound_order\": {\n        \"order_number\": 12,\n        \"order_date\": \"12-10-2023\",\n        \"section\": {\n            \"section_code\": 1,\n            \"warehouse_code\": 1\n        },\n        \"batch_stock\": [\n            {\n                \"batch_number\": 1,\n                \"product_id\": 1,\n                \"current_temperature\": 40,\n                \"minimum_temperature\": 10,\n                \"initial_quantity\": 24,\n                \"current_quantity\": 24,\n                \"manufacturing_date\": \"10-10-2023\",\n                \"manufacturing_time\": \"01-01-0001 12:30:00\",\n                \"due_date\": \"20-10-2023\"\n            },\n            {\n                \"batch_number\": 2,\n                \"product_id\": 2,\n                \"current_temperature\": 10.0,\n                \"minimum_temperature\": 12,\n                \"initial_quantity\": 300,\n                \"current_quantity\": 300,\n                \"manufacturing_date\": \"10-01-2023\",\n                \"manufacturing_time\": \"01-01-0001 12:30:00\",\n                \"due_date\": \"10-01-2030\"\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/fresh-products/inboundorder",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"inboundorder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 2 - Lista completa de productos o por categoria",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNjc5MCwiZXhwIjoxNjc2NDE4NTkwfQ.wD52NtI2MNlTmN1i8FLvA7orrzXTspp3RW481CjLNYC6k8Wjp9kLTuDLDKGZH234UmEYNC5twffO3PWhq2UxuQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/list?code=FF",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"list"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "FF"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 2 - Dar de alta una lista de productos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNjc5MCwiZXhwIjoxNjc2NDE4NTkwfQ.wD52NtI2MNlTmN1i8FLvA7orrzXTspp3RW481CjLNYC6k8Wjp9kLTuDLDKGZH234UmEYNC5twffO3PWhq2UxuQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2023-01-10\",\n    \"buyer_id\": 2,\n    \"order_status\": {\n        \"status_code\": \"carrito\"\n    },\n    \"product\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        }\n    ]\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 2 - Mostrar productos en la orden",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/orders/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"orders",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 2 - Modificar la orden existente",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"date\": \"2023-01-25\",\n    \"buyer_id\": 2,\n    \"order_status\": {\n        \"status_code\": \"carrito\"\n    },\n    \"product\": [\n        {\n            \"product_id\": 2,\n            \"quantity\": 20\n        },\n        {\n            \"product_id\": 1,\n            \"quantity\": 10\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/orders/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"orders",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 3 - Lista de productos con lotes donde aparezca",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/1/batch/list?order=L",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"1",
+						"batch",
+						"list"
+					],
+					"query": [
+						{
+							"key": "order",
+							"value": "L"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 4 - Post",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/v1/fresh-products/4/warehouse/list",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"4",
+						"warehouse",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 5 - Sin fltrado",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/batch/list/due-date/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"batch",
+						"list",
+						"due-date",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requerimiento 5 - Ordenados y filtrados",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiVG9tYXMiLCJhdXRob3JpdGllcyI6WyJSRVBSRVNFTlRBTlRFIl0sImlhdCI6MTY3NjQxNTM5MywiZXhwIjoxNjc2NDE3MTkzfQ.lhKsyv7uVJKeKq8XGOCIw_MlTIB-ygufL-aHzmq0h_vuhlmxBrVavVtdZh5MLvrab6w5DzJhQoAIACsYjcaRKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/fresh-products/batch/list/due-date/3?order=date_asc&category=FS",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"batch",
+						"list",
+						"due-date",
+						"3"
+					],
+					"query": [
+						{
+							"key": "order",
+							"value": "date_asc"
+						},
+						{
+							"key": "category",
+							"value": "FS"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

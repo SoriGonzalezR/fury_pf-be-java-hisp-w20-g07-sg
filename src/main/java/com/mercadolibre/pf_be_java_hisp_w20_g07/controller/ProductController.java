@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class ProductController {
     //US_1 Representante
     @PostMapping("/inboundorder")
     public ResponseEntity<InboundOrderResponseDto> r1__1(
-            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestBody @Valid InboundOrderRequestDto inboundOrderRequestDto,
             @RequestHeader Map<String, String> headers){
 
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
@@ -44,7 +45,7 @@ public class ProductController {
 
     @PutMapping("/inboundorder")
     public ResponseEntity<InboundOrderResponseDto> r1__2(
-            @RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+            @RequestBody @Valid InboundOrderRequestDto inboundOrderRequestDto,
             @RequestHeader Map<String, String> headers){
 
         String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
@@ -61,7 +62,7 @@ public class ProductController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<PurchaseOrderResponseDTO> createOrder(@RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
+    public ResponseEntity<PurchaseOrderResponseDTO> createOrder(@RequestBody @Valid PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
         return new ResponseEntity(productService.createPurchaseOrder(purchaseOrderRequestDTO), HttpStatus.CREATED);
     }
 
@@ -71,7 +72,7 @@ public class ProductController {
     }
 
     @PutMapping("/orders/{orderId}")
-    public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
+    public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody @Valid PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
         return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
 

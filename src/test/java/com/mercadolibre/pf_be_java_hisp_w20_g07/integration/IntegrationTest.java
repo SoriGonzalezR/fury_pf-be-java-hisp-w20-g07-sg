@@ -72,6 +72,8 @@ public class IntegrationTest {
             .registerModule(new JavaTimeModule())
             .writer();
   }
+
+  //Log in
   @Test
   @DisplayName("Login Ok")
   void loginOk() throws Exception {
@@ -120,6 +122,101 @@ public class IntegrationTest {
 
   }
 
+  //Requerimiento 2
+  @Test
+  void testGetListAllProducts() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
+                    .header("Authorization", "Bearer " + token))
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FRESA"));
+  }
+
+  @Test
+  void testGetListWithoutProducts() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
+                    .header("Authorization", "Bearer " + token)
+                    .param("code","TF"))
+            .andDo(print()).andExpect(status().isNotFound())
+            .andExpect(content().contentType("text/plain;charset=UTF-8"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("No products"));
+
+  }
+
+  @Test
+  void testGetListByCategory() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
+                    .header("Authorization", "Bearer " + token)
+                    .param("code","FF"))
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("PESCADO"));
+  }
+
+  @Test
+  @DisplayName("Save Order")
+  void saveOrderTest() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+    OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
+    List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 2),
+            new ProductDTO(2,2));
+    LocalDate date = LocalDate.parse("2023-01-24" );
+    PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(date,1,orderStatus,productDTOList);
+    String payload = writer.writeValueAsString(purchaseOrderRequestDTO);
+    this.mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/fresh-products/orders")
+                    .header("Authorization", "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(payload))
+            .andDo(print()).andExpect(status().isCreated())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.total_price").value("28000.0"));
+
+  }
+
+  @Test
+  @DisplayName("Products by orderId")
+  void testGetProductsByOrderId() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+
+    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/orders/{orderId}","1")
+                    .header("Authorization", "Bearer " + token))
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FRESA"));
+  }
+
+  @Test
+  @DisplayName("Update Order")
+  void updateOrderTest() throws Exception{
+    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
+    String token = service.login(userRequestDTORepre).getToken();
+    OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
+    List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 2),
+            new ProductDTO(2,2));
+    LocalDate date = LocalDate.parse("2023-01-24" );
+    PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(date,1,orderStatus,productDTOList);
+    String payload = writer.writeValueAsString(purchaseOrderRequestDTO);
+    this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/fresh-products/orders/{orderId}",2)
+                    .header("Authorization", "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(payload))
+            .andDo(print()).andExpect(status().isOk())
+            .andExpect(content().contentType("text/plain;charset=UTF-8"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("update"));
+  }
+
+  //Requerimiento 5
   @Test
   @DisplayName("finBatchesDueToExpireSoon Ok")
   void finBatchesDueToExpireSoon() throws Exception {
@@ -128,9 +225,9 @@ public class IntegrationTest {
 
     String token = service.login(userRequestDTO).getToken();
 
-     mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
-                     .header("Authorization",token)
-             )
+    mockMvc.perform(get("/api/v1/fresh-products/batch/list/due-date/{dias}",3)
+                    .header("Authorization",token)
+            )
             .andDo(print()).andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[0].batch_number").value(7))
@@ -166,7 +263,7 @@ public class IntegrationTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.batch_stock.[2].batch_number").value(8));
 
   }
-  
+
   @Test
   @DisplayName("finBatchesDueToExpireSoon order asc ok")
   void finBatchesDueToExpireSoonAsc() throws Exception {
@@ -201,98 +298,5 @@ public class IntegrationTest {
                     .header("Authorization",token)
             )
             .andDo(print()).andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void testGetListAllProducts() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-
-    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
-                    .header("Authorization", "Bearer " + token))
-            .andDo(print()).andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FRESA"));
-  }
-
-  @Test
-  void testGetListByCategory() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-
-    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
-                    .header("Authorization", "Bearer " + token)
-                    .param("code","FF"))
-            .andDo(print()).andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("PESCADO"));
-  }
-
-  @Test
-  void testGetListWithoutProducts() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-
-    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/list")
-                    .header("Authorization", "Bearer " + token)
-                    .param("code","TF"))
-            .andDo(print()).andExpect(status().isNotFound())
-            .andExpect(content().contentType("text/plain;charset=UTF-8"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$").value("No products"));
-
-  }
-
-  @Test
-  @DisplayName("Products by orderId")
-  void testGetProductsByOrderId() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-
-    this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/fresh-products/orders/{orderId}","1")
-                    .header("Authorization", "Bearer " + token))
-            .andDo(print()).andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FRESA"));
-  }
-
-  @Test
-  @DisplayName("Save Order")
-  void saveOrderTest() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-    OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
-    List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 2),
-            new ProductDTO(2,2));
-    LocalDate date = LocalDate.parse("2023-01-24" );
-    PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(date,1,orderStatus,productDTOList);
-    String payload = writer.writeValueAsString(purchaseOrderRequestDTO);
-    this.mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/fresh-products/orders")
-                    .header("Authorization", "Bearer " + token)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(payload))
-            .andDo(print()).andExpect(status().isCreated())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.total_price").value("28000.0"));
-
-  }
-
-  @Test
-  @DisplayName("Update Order")
-  void updateOrderTest() throws Exception{
-    UserRequestDTO userRequestDTORepre = new UserRequestDTO("Tomas","tomas123");
-    String token = service.login(userRequestDTORepre).getToken();
-    OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
-    List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 2),
-            new ProductDTO(2,2));
-    LocalDate date = LocalDate.parse("2023-01-24" );
-    PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(date,1,orderStatus,productDTOList);
-    String payload = writer.writeValueAsString(purchaseOrderRequestDTO);
-    this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/fresh-products/orders/{orderId}",2)
-                    .header("Authorization", "Bearer " + token)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(payload))
-            .andDo(print()).andExpect(status().isOk())
-            .andExpect(content().contentType("text/plain;charset=UTF-8"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$").value("update"));
   }
 }

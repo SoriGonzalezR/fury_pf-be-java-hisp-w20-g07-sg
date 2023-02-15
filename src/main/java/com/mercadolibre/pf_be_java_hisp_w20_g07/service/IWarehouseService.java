@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface IWarehouseService {
 
-    Optional<WareHouse> findById(Integer id);
     List<WareHouse> findAll();
 
     StockResponseDto getStockbyProduct(Integer productId);

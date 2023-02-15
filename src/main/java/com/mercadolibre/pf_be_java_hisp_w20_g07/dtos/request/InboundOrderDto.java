@@ -12,8 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,22 +26,24 @@ import java.util.Objects;
 @Setter
 public class InboundOrderDto {
 
+    @NotNull(message = "id cannot be null")
     @JsonAlias("order_number")
-    private int id;
+    @Min(value = 1,message = "id must be greater than 0")
+    private Integer id;
 
-    //@JsonDeserialize(using = LocalDateDeserializer.class)
-    //@JsonSerialize(using = LocalDateSerializer.class)
-
+    @NotNull(message = "order_date cannot be null")
     @JsonAlias("order_date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
 
+    @NotNull(message = "section must not be null")
+    @Valid
     private SectionDto section;
 
-    private List<BatchDto> batchStock;
-
+    @NotEmpty(message = "batch_stock cannot be empty")
+    private List<@Valid BatchDto> batchStock;
 
     @Override
     public boolean equals(Object o) {
