@@ -514,4 +514,24 @@ public class Requerimiento1Test {
         //Assert
         assertThrows(ResourceNotFoundException.class, () -> productService.update(inboundOrderRequestDto,username));
     }
+
+
+    @Test
+    @DisplayName("map BatchDto To Batch - Product not found")
+    public void mapBatchDtoToBatchNotOk(){
+        //Arrange
+        BatchDto batchDto = new BatchDto(1,1,13.0,12.0,400,400,
+                LocalDate.parse("2022-11-01"),
+                LocalDateTime.parse("0001-01-01T12:30:00"),
+                LocalDate.parse("2025-10-01"));
+        Batch batch = new Batch();
+        Section section = new Section();
+        InboundOrder inboundOrder = new InboundOrder();
+
+        //Act
+        //Se mockean los datos para las validaciones
+        when(productRepository.findById(1)).thenReturn(Optional.empty());
+        //Assert
+        assertThrows(ResourceNotFoundException.class, () -> productService.mapBatchDtoToBatch(batchDto,batch,section,inboundOrder));
+    }
 }

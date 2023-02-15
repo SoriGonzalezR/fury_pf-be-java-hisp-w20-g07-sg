@@ -183,7 +183,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-    private Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
+    public Batch mapBatchDtoToBatch(BatchDto batchDto,Batch batch, Section section, InboundOrder inboundOrder){
 
         batch.setSection(section);
         batch.setInboundOrder(inboundOrder);
