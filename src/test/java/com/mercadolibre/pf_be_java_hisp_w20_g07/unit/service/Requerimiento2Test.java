@@ -79,6 +79,19 @@ public class Requerimiento2Test {
             productService.createPurchaseOrder(purchaseOrderRequestDTO);
         });
     }
+
+    @Test
+    void BuyerNotFoundException (){
+        OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");
+        List<ProductDTO> productDTOList = Arrays.asList(new ProductDTO(1, 2));
+        LocalDate date = LocalDate.parse("2023-01-24" );
+        PurchaseOrderRequestDTO purchaseOrderRequestDTO = new PurchaseOrderRequestDTO(LocalDate.now(),1,orderStatus,productDTOList);
+        when(usersRepository.findById(1)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> {
+            productService.createPurchaseOrder(purchaseOrderRequestDTO);
+        });
+    }
+
     @Test
     void dateDueSoonException (){
         OrderStatusDTO orderStatus = new OrderStatusDTO("carrito");

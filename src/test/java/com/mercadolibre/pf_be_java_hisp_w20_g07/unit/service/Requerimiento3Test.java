@@ -5,6 +5,7 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchProductDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.BatchNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.ProductServiceImpl;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -121,6 +123,7 @@ public class Requerimiento3Test {
         Assertions.assertEquals(anwserExpect, actualOrderL);
         Assertions.assertEquals(anwserExpect, actualOrderC);
         Assertions.assertEquals(anwserExpect, actualOrderF);
+        assertThrows(BatchNotFoundException.class, () -> productService.productInStock(1, "M","Tomas"));
 
     }
 
