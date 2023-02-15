@@ -78,7 +78,7 @@ public class BatchDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BatchDto batchDto = (BatchDto) o;
-        return productId == batchDto.productId && Double.compare(batchDto.currentTemperature, currentTemperature) == 0 && Double.compare(batchDto.minimumTemperature, minimumTemperature) == 0 && initialQuantity == batchDto.initialQuantity && currentQuantity == batchDto.currentQuantity && Objects.equals(batchNumber, batchDto.batchNumber) && Objects.equals(manufacturingDate, batchDto.manufacturingDate) && Objects.equals(manufacturingTime, batchDto.manufacturingTime) && Objects.equals(dueDate, batchDto.dueDate);
+        return Objects.equals(batchNumber, batchDto.batchNumber) && Objects.equals(productId, batchDto.productId) && Objects.equals(currentTemperature, batchDto.currentTemperature) && Objects.equals(minimumTemperature, batchDto.minimumTemperature) && Objects.equals(initialQuantity, batchDto.initialQuantity) && Objects.equals(currentQuantity, batchDto.currentQuantity) && Objects.equals(manufacturingDate, batchDto.manufacturingDate) && Objects.equals(manufacturingTime, batchDto.manufacturingTime) && Objects.equals(dueDate, batchDto.dueDate);
     }
 
     @Override

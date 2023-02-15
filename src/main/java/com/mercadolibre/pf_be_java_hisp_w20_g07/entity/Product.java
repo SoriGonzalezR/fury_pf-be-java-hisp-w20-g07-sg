@@ -31,5 +31,14 @@ public class Product {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch = FetchType.EAGER)
     private List<PurchaseOrderHasProduct> purchaseOrderHasProducts;
 
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", batches=" + batches +
+                ", purchaseOrderHasProducts=" + purchaseOrderHasProducts +
+                '}';
+    }
 }

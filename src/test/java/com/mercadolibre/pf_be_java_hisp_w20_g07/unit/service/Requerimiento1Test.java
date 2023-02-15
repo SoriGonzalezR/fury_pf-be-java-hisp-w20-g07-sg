@@ -73,11 +73,11 @@ public class Requerimiento1Test {
     public void saveOK(){
         //Arrange
         List<BatchDto> batchDtos = new ArrayList<>();
-        batchDtos.add(new BatchDto(null,1,13,12,400,400,
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
                 LocalDate.parse("2022-11-01"),
                 LocalDateTime.parse("0001-01-01T12:30:00"),
                 LocalDate.parse("2025-10-01")));
-        batchDtos.add(new BatchDto(null,2,11,10,200,200,
+        batchDtos.add(new BatchDto(1,2,11.0,10.0,200,200,
                 LocalDate.parse("2022-12-01"),
                 LocalDateTime.parse("0001-01-01T13:30:00"),
                 LocalDate.parse("2024-10-01")));
@@ -111,11 +111,11 @@ public class Requerimiento1Test {
     public void updateOK(){
         //Arrange
         List<BatchDto> batchDtos = new ArrayList<>();
-        batchDtos.add(new BatchDto(1,1,13,12,400,400,
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
                 LocalDate.parse("2022-11-01"),
                 LocalDateTime.parse("0001-01-01T12:30:00"),
                 LocalDate.parse("2025-10-01")));
-        batchDtos.add(new BatchDto(2,2,11,10,200,200,
+        batchDtos.add(new BatchDto(2,2,11.0,10.0,200,200,
                 LocalDate.parse("2022-12-01"),
                 LocalDateTime.parse("0001-01-01T13:30:00"),
                 LocalDate.parse("2024-10-01")));

@@ -410,8 +410,7 @@ Sinónimos de Representante: supervisor, líder.
 }
 ```
 
-#### Agradecimientos: A nuestro querido Scrum Master Carlos Arroyo ❤️ por antojarnos de comida y a nuestros instructores Martin, Jean y Adrian por compartir su conocimiento!!
 
 ## Modelo Relacional 
-![descripcion](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width='100px'}
-![modelo relacional](/src/main/images/model.png){width='100px'}
+![modelo relacional](https://res.cloudinary.com/dainl1ric/image/upload/v1676414369/image_qewsyp.png)
+#### Agradecimientos: A nuestros queridos Scrums Masters Carlos Arroyo  por antojarnos de comida y a nuestros instructores Joy por sus kahoots ❤️, Martin, Jean y Adrian por compartir su conocimiento!!

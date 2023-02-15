@@ -2,6 +2,7 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.controller;
 
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.InboundOrderRequestDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.BatchStockDTO;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.StockResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.PurchaseOrderRequestDTO;
@@ -74,16 +75,13 @@ public class ProductController {
     public ResponseEntity<String> updateOrder(@PathVariable int orderId, @RequestBody @Valid PurchaseOrderRequestDTO purchaseOrderRequestDTO) {
         return new ResponseEntity(productService.updateOrder(orderId, purchaseOrderRequestDTO), HttpStatus.OK);
     }
-    
-/*
-    //US_3 Representante
 
+    //US_3 Representante
     @GetMapping("/{idProduct}/batch/list")
-    public ResponseEntity<String> r3__1_2(@RequestParam(required = false) String idOrder) {
-        String info = "info imortante get /api/v1//api/v1/fresh-products/{idProduct}/batch/list?order={L, C, F}";
-        return new ResponseEntity(info, HttpStatus.OK);
+    public ResponseEntity<BatchStockDTO> getProductInStock(@PathVariable Integer idProduct, @RequestParam(required = false) String order, @RequestHeader Map<String, String> headers) {
+        String username = SesionServiceImpl.getUsername(headers.get("Authorization").replace("Bearer ",""));
+        return new ResponseEntity(productService.productInStock(idProduct, order, username), HttpStatus.OK);
     }
-*/
 
     //US 4 Representante
     @GetMapping("/{idProduct}/warehouse/list")
@@ -93,7 +91,6 @@ public class ProductController {
     }
 
     //US 5 Representante
-
     @GetMapping("/batch/list/due-date/{cantDays}")
     public ResponseEntity<FindBatchesDueToExpireSoonDto> r5__1_1(
             @PathVariable Integer cantDays,
