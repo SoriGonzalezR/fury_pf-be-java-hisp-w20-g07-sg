@@ -9,6 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,29 +26,42 @@ import java.util.Objects;
 public class BatchDto {
 
 
-
+    @NotNull(message = "batch_number cannot be null")
+    @Min(value = 1, message = "batch_number cannot be lower than 1")
     private Integer batchNumber;
 
-    private int productId;
+    @NotNull(message = "product_id cannot be null")
+    @Min(value = 1 , message = "product_id cannot be lower than 1")
+    private Integer productId;
 
-    private double currentTemperature;
+    @NotNull(message = "current_temperature cannot be null")
+    private Double currentTemperature;
 
-    private double minimumTemperature;
-    private int initialQuantity;
-    private int currentQuantity;
+    @NotNull(message = "minimum_temperature cannot be null")
+    private Double minimumTemperature;
 
+    @NotNull(message = "initial_quantity cannot be null")
+    @Min(value = 1,message = "initial_quantity cannot be lower than 1")
+    private Integer initialQuantity;
+    @NotNull(message = "current_quantity cannot be null")
+    @Min(value = 0 , message = "current_quantity cannot be lower than 0")
+    private Integer currentQuantity;
+
+    @NotNull(message = "manufacturing_date cannot be null")
+    @Past(message = "manufacturing_date must be a past date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate manufacturingDate;
 
-    //@Temporal(TemporalType.TIME)
+    @NotNull(message = "manufacturing_time cannot be null")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    //@DateTimeFormat(style = "dd-MM-yyyy HH:mm:ss")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime manufacturingTime;
 
+    @NotNull(message = "due_date cannot be null")
+    @Future(message = "due_date must be a future date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

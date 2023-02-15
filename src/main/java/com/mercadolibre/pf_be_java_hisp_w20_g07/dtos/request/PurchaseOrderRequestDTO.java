@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,15 @@ import java.util.List;
 @NoArgsConstructor
 @Getter @Setter
 public class PurchaseOrderRequestDTO {
-    @NotNull(message = "La fecha no puede estar vaciá")
-
+    @NotNull(message = "date cannot be null")
     private LocalDate date;
+
+    @NotNull(message = "buyer_id cannot be null")
     private Integer buyerId;
+    @NotNull(message = "order_status cannot be null")
     private OrderStatusDTO orderStatus;
+
+    @NotNull(message = "product cannot be null")
     private List<ProductDTO> product;
 
 }

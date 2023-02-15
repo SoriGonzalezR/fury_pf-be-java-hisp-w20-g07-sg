@@ -5,11 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class OrderStatusDTO {
+
+    @NotBlank(message = "status_code cannot be blank")
     private String statusCode;
 
 }

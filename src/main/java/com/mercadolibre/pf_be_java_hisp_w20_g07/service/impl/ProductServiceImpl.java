@@ -238,7 +238,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         if (!productsDueThreeWeeks.isEmpty()) {
-            throw new RuntimeException("These date will due soon");
+            throw new ResourceNotFoundException("These date will due soon");
         }
         OrderStatus orderStatus = orderStatusRepository.findByStatus(purchaseOrderRequestDTO.getOrderStatus().getStatusCode());
         PurchaseOrder purchaseOrder = new PurchaseOrder();

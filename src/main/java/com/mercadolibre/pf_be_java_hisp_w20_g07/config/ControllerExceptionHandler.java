@@ -2,6 +2,7 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.config;
 
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.MessageDto;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.ExceptionValidationDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.*;
 
 
@@ -9,11 +10,17 @@ import com.newrelic.api.agent.NewRelic;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Basic handling for exceptions.
@@ -107,6 +114,13 @@ public class ControllerExceptionHandler {
 
     return  new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.UNAUTHORIZED);
   }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ExceptionValidationDto> methodArgumentNotValidException(MethodArgumentNotValidException e, BindingResult r) {
+    List<String> errosMessages = r.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.toList());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionValidationDto("Invalid field", errosMessages));
+  }
+
 
 
 
