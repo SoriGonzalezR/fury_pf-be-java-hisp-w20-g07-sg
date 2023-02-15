@@ -71,9 +71,7 @@
             <exclude>**/com/mercadolibre/**/security/JWTAuthorizationFilter.class</exclude>
             <exclude>**/com/mercadolibre/**/config/ControllerExceptionHandler.class**</exclude>
             <exclude>**/com/mercadolibre/**/config/DataSourceConfig.class</exclude>
-            <exclude>**/com/mercadolibre/**/service/IProductService.class</exclude>
-            <exclude>**/com/mercadolibre/**/service/ISesionService.class</exclude>
-            <exclude>**/com/mercadolibre/**/service/IWarehouseService.class</exclude>
+            <exclude>**/com/mercadolibre/**/repository/**</exclude>
           </excludes>
         </configuration>
       </plugin>
