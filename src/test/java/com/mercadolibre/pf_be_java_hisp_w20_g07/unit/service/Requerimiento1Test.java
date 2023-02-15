@@ -7,10 +7,10 @@ import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.request.SectionDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.InboundOrderResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.UserNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.ProductServiceImpl;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.unit.utils.Utils;
-import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -152,6 +151,57 @@ public class Requerimiento1Test {
 
         //Assert
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("save inbound order warehouse not found")
+    public void saveWarehouseNotFoundNotOk(){
+        //Arrange
+        List<BatchDto> batchDtos = new ArrayList<>();
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
+                LocalDate.parse("2022-11-01"),
+                LocalDateTime.parse("0001-01-01T12:30:00"),
+                LocalDate.parse("2025-10-01")));
+        batchDtos.add(new BatchDto(1,2,11.0,10.0,200,200,
+                LocalDate.parse("2022-12-01"),
+                LocalDateTime.parse("0001-01-01T13:30:00"),
+                LocalDate.parse("2024-10-01")));
+        InboundOrderDto inboundOrderDto = new InboundOrderDto(15, LocalDate.parse("2023-12-10"),
+                sectionDto, batchDtos);
+        inboundOrderRequestDto.setInboundOrder(inboundOrderDto);
+
+        //Act
+        //Se mockean los datos para las validaciones
+        when(warehouseRepository.findById(1)).thenReturn(Optional.empty());
+
+        //Assert
+        assertThrows(ResourceNotFoundException.class, () -> productService.save(inboundOrderRequestDto,username));
+    }
+
+    @Test
+    @DisplayName("save inbound order user not found")
+    public void saveUserNotFoundNotOk(){
+        //Arrange
+        List<BatchDto> batchDtos = new ArrayList<>();
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
+                LocalDate.parse("2022-11-01"),
+                LocalDateTime.parse("0001-01-01T12:30:00"),
+                LocalDate.parse("2025-10-01")));
+        batchDtos.add(new BatchDto(1,2,11.0,10.0,200,200,
+                LocalDate.parse("2022-12-01"),
+                LocalDateTime.parse("0001-01-01T13:30:00"),
+                LocalDate.parse("2024-10-01")));
+        InboundOrderDto inboundOrderDto = new InboundOrderDto(15, LocalDate.parse("2023-12-10"),
+                sectionDto, batchDtos);
+        inboundOrderRequestDto.setInboundOrder(inboundOrderDto);
+
+        //Act
+        //Se mockean los datos para las validaciones
+        when(warehouseRepository.findById(1)).thenReturn(Optional.ofNullable(mockWarehouse));
+        when(userRepository.findUserByUsername(username)).thenReturn(Optional.empty());
+
+        //Assert
+        assertThrows(UserNotFoundException.class, () -> productService.save(inboundOrderRequestDto,username));
     }
 
     @Test
@@ -300,6 +350,57 @@ public class Requerimiento1Test {
     }
 
     //UPDATE NOT OK
+    @Test
+    @DisplayName("update inbound order warehouse not found")
+    public void updateWarehouseNotFoundNotOk(){
+        //Arrange
+        List<BatchDto> batchDtos = new ArrayList<>();
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
+                LocalDate.parse("2022-11-01"),
+                LocalDateTime.parse("0001-01-01T12:30:00"),
+                LocalDate.parse("2025-10-01")));
+        batchDtos.add(new BatchDto(1,2,11.0,10.0,200,200,
+                LocalDate.parse("2022-12-01"),
+                LocalDateTime.parse("0001-01-01T13:30:00"),
+                LocalDate.parse("2024-10-01")));
+        InboundOrderDto inboundOrderDto = new InboundOrderDto(15, LocalDate.parse("2023-12-10"),
+                sectionDto, batchDtos);
+        inboundOrderRequestDto.setInboundOrder(inboundOrderDto);
+
+        //Act
+        //Se mockean los datos para las validaciones
+        when(warehouseRepository.findById(1)).thenReturn(Optional.empty());
+
+        //Assert
+        assertThrows(ResourceNotFoundException.class, () -> productService.update(inboundOrderRequestDto,username));
+    }
+
+    @Test
+    @DisplayName("update inbound order user not found")
+    public void updateUserNotFoundNotOk(){
+        //Arrange
+        List<BatchDto> batchDtos = new ArrayList<>();
+        batchDtos.add(new BatchDto(1,1,13.0,12.0,400,400,
+                LocalDate.parse("2022-11-01"),
+                LocalDateTime.parse("0001-01-01T12:30:00"),
+                LocalDate.parse("2025-10-01")));
+        batchDtos.add(new BatchDto(1,2,11.0,10.0,200,200,
+                LocalDate.parse("2022-12-01"),
+                LocalDateTime.parse("0001-01-01T13:30:00"),
+                LocalDate.parse("2024-10-01")));
+        InboundOrderDto inboundOrderDto = new InboundOrderDto(15, LocalDate.parse("2023-12-10"),
+                sectionDto, batchDtos);
+        inboundOrderRequestDto.setInboundOrder(inboundOrderDto);
+
+        //Act
+        //Se mockean los datos para las validaciones
+        when(warehouseRepository.findById(1)).thenReturn(Optional.ofNullable(mockWarehouse));
+        when(userRepository.findUserByUsername(username)).thenReturn(Optional.empty());
+
+        //Assert
+        assertThrows(UserNotFoundException.class, () -> productService.update(inboundOrderRequestDto,username));
+    }
+
     @Test
     @DisplayName("update inbound order user dont belong to warehouse")
     public void updateUserNotBelongToWarehouseNotOK(){
