@@ -2,6 +2,7 @@ package com.mercadolibre.pf_be_java_hisp_w20_g07.unit.service;
 
 import com.mercadolibre.pf_be_java_hisp_w20_g07.dtos.response.StockResponseDto;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.entity.*;
+import com.mercadolibre.pf_be_java_hisp_w20_g07.exceptions.ResourceNotFoundException;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.repository.*;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.IWarehouseService;
 import com.mercadolibre.pf_be_java_hisp_w20_g07.service.impl.WarehouseServiceImpl;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -105,6 +107,16 @@ public class Requerimiento4Test{
         assertEquals(2, result.getWarehouses().size());
         assertEquals(30, result.getWarehouses().get(0).getTotalQuantity());
         assertEquals(10, result.getWarehouses().get(1).getTotalQuantity());
+    }
+
+    @Test
+    public void testGetStockbyProducNotOk() {
+
+        when(productRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            warehouseService.getStockbyProduct(1);
+        });
     }
 
 

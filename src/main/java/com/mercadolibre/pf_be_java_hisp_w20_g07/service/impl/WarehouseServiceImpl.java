@@ -25,12 +25,7 @@ public class WarehouseServiceImpl implements IWarehouseService {
 
     @Autowired
     IWarehouseRepository warehouseRepository;
-
-    @Override
-    public Optional<WareHouse> findById(Integer id) {
-        return warehouseRepository.findById(id);
-    }
-
+    
     @Override
     public List<WareHouse> findAll() {
         return warehouseRepository.findAll();
